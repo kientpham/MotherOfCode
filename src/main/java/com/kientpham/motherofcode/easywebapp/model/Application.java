@@ -24,6 +24,9 @@ public class Application implements Serializable{
 	@XmlAttribute(name = "domain")
 	private String domain;
 	
+	@XmlAttribute(name = "appPath")
+	private String appPath;
+	
 	@XmlElement(name = "service")
 	private List<Service> services;
 	
@@ -42,6 +45,10 @@ public class Application implements Serializable{
 	
 	public String getDomain() {
 		return this.domain;
+	}
+	
+	public String getAppPath() {
+		return this.appPath;
 	}
 	
 	public List<Service> getServices(){

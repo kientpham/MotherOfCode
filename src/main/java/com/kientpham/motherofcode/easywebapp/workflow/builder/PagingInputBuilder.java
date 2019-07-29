@@ -12,14 +12,14 @@ import com.kientpham.motherofcode.mainfactory.baseworkflow.WorkflowException;
 import com.kientpham.motherofcode.mainfactory.codefactory.CodeBuilder;
 import com.kientpham.motherofcode.utils.PackageUtils;
 
-public class EntityBuilder implements BaseBuilder<TransactionModel> {
+public class PagingInputBuilder implements BaseBuilder<TransactionModel> {
 
 	@Override
 	public void execute(TransactionModel transaction) throws WorkflowException {
-		System.out.println(buildEntityClass(transaction));
+		System.out.println(buildPagingInputClass(transaction));
 	}
 
-	private String buildEntityClass(TransactionModel transaction) {		
+	private String buildPagingInputClass(TransactionModel transaction) {		
 		Entity entity=transaction.getEntity();		
 		List<String> listDomain = new ArrayList<String>();
 		listDomain.add(transaction.getApplication().getDomain());
@@ -35,12 +35,12 @@ public class EntityBuilder implements BaseBuilder<TransactionModel> {
 		builder.lombokGetterSetter();
 		builder.entityAnnotated(entity.getTable());
 		builder.getsetAnnotated();		
-		buildClassContent(entity, builder);		
+		buildClassContent(entity, builder);
+		
 		listDomain.add(entity.getName());
+		String filePath = PackageUtils.buildFilePath(listDomain);
 		transaction.getFullDomainDTO().setEntityDomain(PackageUtils.buildDomainName(listDomain));
 		
-		String filePath = transaction.getApplication().getAppPath()+ PackageUtils.buildFilePath(listDomain);		
-		PackageUtils.writeToFile(builder.getCode(), filePath);
 		return builder.getCode();
 	}
 

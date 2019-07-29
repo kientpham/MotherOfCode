@@ -21,6 +21,12 @@ public class Entity implements Serializable{
 	@XmlAttribute(name = "table")
 	private String table;	
 	
+	@XmlAttribute(name = "hasPaging")
+	private String hasPaging;
+	
+	@XmlAttribute(name = "type")
+	private String type;
+	
     @XmlElement(name = "field")
 	List<Field> fields;
 	
@@ -33,6 +39,14 @@ public class Entity implements Serializable{
     
     public String getTable() {
     	return this.table;
+    }
+    
+    public String hasPaging() {
+    	return this.hasPaging;
+    }
+    
+    public String getType() {
+    	return this.type;
     }
     
     public List<Field> getFields(){

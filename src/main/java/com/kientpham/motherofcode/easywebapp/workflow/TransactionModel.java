@@ -3,11 +3,10 @@ package com.kientpham.motherofcode.easywebapp.workflow;
 import java.util.List;
 
 import com.kientpham.motherofcode.easywebapp.model.Application;
-import com.kientpham.motherofcode.easywebapp.model.CodeBuilder;
 import com.kientpham.motherofcode.easywebapp.model.Entity;
-import com.kientpham.motherofcode.easywebapp.model.OmnibusDTO;
+import com.kientpham.motherofcode.easywebapp.model.FullDomainDTO;
 import com.kientpham.motherofcode.easywebapp.model.Service;
-import com.kientpham.motherofcode.mainfactory.codefactory.CodeFacade;
+import com.kientpham.motherofcode.mainfactory.codefactory.CodeBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,21 +21,12 @@ public class TransactionModel {
 	
 	private Entity entity;
 	
-	List<String> listDomain;
-	
-	private String xmlModelFile;
-	
-	private String language;
-	
-	
-	
-	
+	List<String> listDomain;	
+		
 	private String outputCode;
 	
-	private OmnibusDTO omnibusDto;
-	
-	private CodeBuilder codeBuilder;
-	
-	private CodeFacade codeFacade;
+	private FullDomainDTO fullDomainDTO;
+		
+	private CodeBuilder codeFacade;
 	
 }

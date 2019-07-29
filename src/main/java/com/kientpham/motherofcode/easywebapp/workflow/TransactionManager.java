@@ -12,11 +12,11 @@ import javax.xml.bind.Unmarshaller;
 
 import com.kientpham.motherofcode.easywebapp.model.Application;
 import com.kientpham.motherofcode.easywebapp.model.Entity;
-import com.kientpham.motherofcode.easywebapp.model.OmnibusDTO;
+import com.kientpham.motherofcode.easywebapp.model.FullDomainDTO;
 import com.kientpham.motherofcode.easywebapp.model.Service;
 import com.kientpham.motherofcode.mainfactory.baseworkflow.BaseTransactionManager;
 import com.kientpham.motherofcode.mainfactory.baseworkflow.WorkflowException;
-import com.kientpham.motherofcode.mainfactory.codefactory.CodeFacade;
+import com.kientpham.motherofcode.mainfactory.codefactory.CodeBuilder;
 
 public class TransactionManager implements BaseTransactionManager<TransactionModel>{
 
@@ -31,7 +31,7 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 	@Override
 	public List<TransactionModel> getTransactionModel(List<?> inputList) throws WorkflowException {		
 		Application app=this.getApplicationFromXML(inputList.get(0).toString());
-		CodeFacade codeFacade=new CodeFacade(inputList.get(1).toString());
+		CodeBuilder codeFacade=new CodeBuilder(inputList.get(1).toString());
 		
 		List<TransactionModel> listTransaction=new ArrayList<TransactionModel>();		
 		List<Service> services = app.getServices();
@@ -43,17 +43,13 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 				model.setService(service);
 				model.setEntity(entity);	
 				model.setCodeFacade(codeFacade);
-				model.setOmnibusDto(new OmnibusDTO());
+				FullDomainDTO domainDTO=new FullDomainDTO();
+				domainDTO.setPagingInput("com.kienp.webapp.common.dto.paging.PagingInputDTO");
+				domainDTO.setPagingOutput("com.kienp.webapp.common.dto.paging.PagingOutputDTO");
+				model.setFullDomainDTO(domainDTO);
 				listTransaction.add(model);
 			}
-		}
-		
-//		transactionModel.setCodeFacade(codeFacade);
-//		Application app = transactionModel.getApplication();
-//		transaction.setXmlModelFile(inputList.get(0).toString());
-//		transaction.setLanguage(inputList.get(1).toString());
-//		transaction.setOmnibusDto(new OmnibusDTO());
-		
+		}		
 		return listTransaction;
 	}
 	

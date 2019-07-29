@@ -30,6 +30,9 @@ public class Service implements Serializable{
 	@XmlElement(name = "businessDomain")	
 	private String businessDomain;
 	
+	@XmlElement(name = "serviceDomain")	
+	private String serviceDomain;
+	
 	@XmlElement(name = "entity")
 	List<Entity> entities;
 	
@@ -47,6 +50,10 @@ public class Service implements Serializable{
 	
 	public String getBusinessDomain() {
 		return this.businessDomain;
+	}
+	
+	public String getServiceDomain() {
+		return this.serviceDomain;
 	}
 	
 	public String getName() {

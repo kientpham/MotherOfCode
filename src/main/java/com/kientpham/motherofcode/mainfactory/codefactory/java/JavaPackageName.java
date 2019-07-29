@@ -10,7 +10,7 @@ public class JavaPackageName implements PackageName{
 	@Override
 	public String buildPackageName(String domain) {
 		
-		return "package "+ domain + "\r\n";
+		return "package "+ domain + ";\r\n";
 	}
 	
 	@Override

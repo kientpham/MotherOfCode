@@ -4,10 +4,20 @@ public interface ClassConstruction {
 
 	String entityAnnotated(String tableName);
 
-	String lombokAnnotated();
+	String getsetAnnotated();
 
-	String getClassName(String className, String inheritance, String parent);
+	String getClassNameImplements(String className, String parent);
+	
+	String getClassNameExtends(String className, String parent);
+
+	String getCrudRepositoryInterface(String interfaceName, String entityName, String idType);
 
 	String getRepositoryInterface(String interfaceName, String entityName, String idType);
+
+	String componentAnnotated();
+
+	String className(String className);
+
+	String interfaceName(String className);
 
 }

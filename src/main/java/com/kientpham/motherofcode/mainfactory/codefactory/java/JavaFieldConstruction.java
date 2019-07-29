@@ -7,12 +7,12 @@ public class JavaFieldConstruction implements FieldConstruction {
 
 	@Override
 	public String idFieldAnnotated() {
-		return "\t@Id\r\n" + "\t@GeneratedValue(strategy=GenerationType.IDENTITY)\r\n";
+		return "\t@Id\r\n" + "\t@GeneratedValue(strategy=GenerationType.IDENTITY)";
 	}
 
 	@Override
 	public String normalFieldAnnoted(String columnName) {
-		return String.format("\t@Column(name = \"%1$s\")\r\n", columnName);
+		return String.format("\t@Column(name = \"%1$s\")", columnName);
 	}
 
 	@Override
