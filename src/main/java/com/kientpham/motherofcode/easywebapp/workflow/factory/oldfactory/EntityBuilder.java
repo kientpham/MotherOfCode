@@ -1,4 +1,4 @@
-package com.kientpham.motherofcode.easywebapp.workflow.builder;
+package com.kientpham.motherofcode.easywebapp.workflow.factory.oldfactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +12,14 @@ import com.kientpham.motherofcode.mainfactory.baseworkflow.WorkflowException;
 import com.kientpham.motherofcode.mainfactory.codefactory.CodeBuilder;
 import com.kientpham.motherofcode.utils.PackageUtils;
 
-public class PagingInputBuilder implements BaseBuilder<TransactionModel> {
+public class EntityBuilder implements BaseBuilder<TransactionModel> {
 
 	@Override
 	public void execute(TransactionModel transaction) throws WorkflowException {
-		System.out.println(buildPagingInputClass(transaction));
+		System.out.println(buildEntityClass(transaction));
 	}
 
-	private String buildPagingInputClass(TransactionModel transaction) {		
+	private String buildEntityClass(TransactionModel transaction) {		
 		Entity entity=transaction.getEntity();		
 		List<String> listDomain = new ArrayList<String>();
 		listDomain.add(transaction.getApplication().getDomain());
@@ -33,14 +33,15 @@ public class PagingInputBuilder implements BaseBuilder<TransactionModel> {
 		if (hasJoinTable)
 			builder.importlist();
 		builder.lombokGetterSetter();
+		
 		builder.entityAnnotated(entity.getTable());
 		builder.getsetAnnotated();		
-		buildClassContent(entity, builder);
-		
+		buildClassContent(entity, builder);		
 		listDomain.add(entity.getName());
-		String filePath = PackageUtils.buildFilePath(listDomain);
 		transaction.getFullDomainDTO().setEntityDomain(PackageUtils.buildDomainName(listDomain));
 		
+		String filePath = transaction.getApplication().getAppPath()+ PackageUtils.buildFilePath(listDomain);		
+		PackageUtils.writeToFile(builder.getCode(), filePath);
 		return builder.getCode();
 	}
 

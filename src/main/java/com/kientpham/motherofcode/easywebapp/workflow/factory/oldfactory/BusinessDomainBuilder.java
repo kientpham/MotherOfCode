@@ -1,4 +1,4 @@
-package com.kientpham.motherofcode.easywebapp.workflow.builder;
+package com.kientpham.motherofcode.easywebapp.workflow.factory.oldfactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class BusinessDomainBuilder implements BaseBuilder<TransactionModel> {
 	public void execute(TransactionModel transactionModel) throws WorkflowException {
 		System.out.println(this.buildBusinessClass(transactionModel));
 		
-	}
+	}	
 
 	private String buildBusinessClass(TransactionModel transaction) {
 		List<String> listDomain = new ArrayList<String>();

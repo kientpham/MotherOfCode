@@ -41,7 +41,6 @@ public final class PackageUtils {
 		String[] sub = pathWithDot.split("\\.");
 		String path = "";
 		for (int i = 0; i < sub.length; i++) {
-			//if (!path.isEmpty())
 			path += File.separator+ sub[i];
 		}
 		return path;

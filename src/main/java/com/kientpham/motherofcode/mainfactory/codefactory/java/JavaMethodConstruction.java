@@ -1,7 +1,6 @@
 package com.kientpham.motherofcode.mainfactory.codefactory.java;
 
-import java.util.HashMap;
-import java.util.Map;
+
 
 import com.kientpham.motherofcode.easywebapp.model.Entity;
 import com.kientpham.motherofcode.easywebapp.model.Field;
@@ -31,7 +30,6 @@ public class JavaMethodConstruction implements MethodConstruction {
 						"\r\n\tPage<%1$s> search%1$s(@Param(\"searchTerm\") String searchTerm, Pageable pageRequest);",
 						entity.getName());
 		return code;
-
 	}
 
 	@Override

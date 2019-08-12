@@ -1,12 +1,12 @@
 package com.kientpham.motherofcode.easywebapp.workflow;
 
-import com.kientpham.motherofcode.easywebapp.workflow.builder.BusinessDomainBuilder;
-import com.kientpham.motherofcode.easywebapp.workflow.builder.DBGatewayBuilder;
-import com.kientpham.motherofcode.easywebapp.workflow.builder.DBGatewayInterfaceBuilder;
-import com.kientpham.motherofcode.easywebapp.workflow.builder.EntityBuilder;
-import com.kientpham.motherofcode.easywebapp.workflow.builder.RepositoryBuilder;
-import com.kientpham.motherofcode.easywebapp.workflow.builder.ServiceBuilder;
-import com.kientpham.motherofcode.easywebapp.workflow.builder.ServiceInterfaceBuilder;
+import com.kientpham.motherofcode.easywebapp.workflow.factory.oldfactory.BusinessDomainBuilder;
+import com.kientpham.motherofcode.easywebapp.workflow.factory.oldfactory.DBGatewayBuilder;
+import com.kientpham.motherofcode.easywebapp.workflow.factory.oldfactory.DBGatewayInterfaceBuilder;
+import com.kientpham.motherofcode.easywebapp.workflow.factory.oldfactory.EntityBuilder;
+import com.kientpham.motherofcode.easywebapp.workflow.factory.oldfactory.RepositoryBuilder;
+import com.kientpham.motherofcode.easywebapp.workflow.factory.oldfactory.ServiceBuilder;
+import com.kientpham.motherofcode.easywebapp.workflow.factory.oldfactory.ServiceInterfaceBuilder;
 import com.kientpham.motherofcode.mainfactory.baseworkflow.AbstractFactory;
 import com.kientpham.motherofcode.mainfactory.baseworkflow.MasterWorkflow;
 

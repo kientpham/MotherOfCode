@@ -19,7 +19,11 @@ public class FullDomainDTO {
 	
 	private String dbGatewayInterface;
 	
+	private String dbGateway;
+	
 	private String bussinessDomain;
+	
+	private String serviceInterfaceDomain;
 	
 	private String serviceDomain;
 	
