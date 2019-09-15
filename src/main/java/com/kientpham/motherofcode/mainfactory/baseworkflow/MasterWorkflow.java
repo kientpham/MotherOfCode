@@ -16,6 +16,14 @@ public class MasterWorkflow<T> {
 	private List<BaseBuilder<T>> builderList;
 
 	private BaseTransactionManager<T> baseTransaction;
+	
+	private List<BaseBuilder<T>> preExecuteBuilderList;
+	
+	public void setPreExecuteBuilder(BaseBuilder<T> builder) {
+		if (preExecuteBuilderList==null)
+			preExecuteBuilderList=new ArrayList<BaseBuilder<T>>();
+		preExecuteBuilderList.add(builder);
+	}
 
 	/**
 	 * 
@@ -49,7 +57,12 @@ public class MasterWorkflow<T> {
 	public void executeWorkflow(List<T> transactionList) throws WorkflowException {
 		if (baseTransaction == null || builderList == null) {
 			throw new WorkflowException("Could not excute the work flow");
-		}
+		}		
+		preExecute(transactionList);		
+		execute(transactionList);
+	}
+
+	private void execute(List<T> transactionList) {
 		for (T transaction : transactionList) {		
 			try {
 				for (BaseBuilder<T> builder : builderList) {
@@ -59,6 +72,14 @@ public class MasterWorkflow<T> {
 				baseTransaction.updateTransactionWhenException(transaction, e);
 			} finally {
 				baseTransaction.saveTransaction(transaction);
+			}
+		}
+	}
+
+	private void preExecute(List<T> transactionList) throws WorkflowException {
+		if (preExecuteBuilderList!=null) {
+			for (BaseBuilder<T> builder : preExecuteBuilderList) {
+				builder.execute(transactionList.get(0));
 			}
 		}
 	}

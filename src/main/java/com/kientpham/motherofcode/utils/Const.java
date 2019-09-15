@@ -6,6 +6,8 @@ public final class Const {
 	
 	public final static String CSHARP="C#";
 	
+	public final static String JAVASCRIPT="JAVASCRIPT";	
+	
 	public final static String HTML="HTML";
 	
 	public final static String CODE="CODE";

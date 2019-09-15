@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<application name="EasyApp" title="Easy Web Application" domain="com.kientpham.webapp" appPath="C:\Users\jm838d\Documents\1. My Prj\MyToolkits\baseapp\base-webapp-autogen\src\main\java">	
+<application name="EasyApp" title="Easy Web Application" domain="com.kientpham.webapp" appPath="C:\Users\jm838d\Documents\1. My Prj\MyToolkits\baseapp\base-webapp-autogen\src\main">	
 	<service name="userservice" >
 		<entityDomain>dto.entity</entityDomain>
 		<dbgatewayDomain>dbgateway</dbgatewayDomain>
 		<repositoryDomain>dbgateway.repository</repositoryDomain>
 		<businessDomain>domain</businessDomain>
 		<serviceDomain>service</serviceDomain>
+		<commonDomain>common</commonDomain>
 		<entity name="Group" table="\&quot;GROUP\&quot;">
 			<field name="id" identity="IDENTITY" column="GROUP_ID" type="Integer"/>
 			<field name="name" column="GROUP_NAME" type="String"/>
