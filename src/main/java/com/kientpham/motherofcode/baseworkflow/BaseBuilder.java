@@ -1,7 +1,7 @@
 package com.kientpham.motherofcode.baseworkflow;
 
 /**
- * @author trungkienbk@gmail.com
+ * @author Kien Pham - trungkienbk@gmail.com
  *
  * @param <D>
  *            Generic OmnibusDTO.

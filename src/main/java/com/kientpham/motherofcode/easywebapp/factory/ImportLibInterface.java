@@ -1,28 +1,38 @@
 package com.kientpham.motherofcode.easywebapp.factory;
 
-import com.kientpham.motherofcode.easywebapp.workflow.TransactionModel;
+import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
+import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
+import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
 
-public interface ImportLibInterface {
+public interface ImportLibInterface {	
 	
-	public String importForPagingInput(TransactionModel transaction);
+	public String importForEntity(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 	
-	public String importForPagingOutput(TransactionModel transaction);
+	public String importForRepository(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 	
-	public String importForEntity(TransactionModel transaction);
+	public String importForRepositoryPaging(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 	
-	public String importForRepository(TransactionModel transaction);
+	public String importForDBGatewayInterface(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 	
-	public String importForRepositoryPaging(TransactionModel transaction);
-	
-	public String importForDBGatewayInterface(TransactionModel transaction);
-	
-	public String importForDBGateway(TransactionModel transaction);
+	public String importForDBGateway(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 
-	public String importForBusinessObject(TransactionModel transaction);
+	public String importForBusinessObject(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 	
-	public String importForServiceInterface(TransactionModel transaction);
+	public String importForReadService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 	
-	public String importForServiceClass(TransactionModel transaction);	
+	public String importForReadServiceImpl(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+	
+	public String importForWriteService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+	
+	public String importForWriteServiceImpl(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+
+	public String importForEditModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+
+	String importForTableModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+
+	String importForJoinList(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+
+	String importForController(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);	
 	
 	
 	

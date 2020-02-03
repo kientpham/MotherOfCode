@@ -2,8 +2,9 @@ package com.kientpham.motherofcode.baseworkflow;
 
 import java.util.List;
 
+
 /**
- * @author trungkienbk@gmail.com
+ * @author Kien Pham - trungkienbk@gmail.com
  *
  * @param <T>
  *            Generic Transaction Model.
@@ -11,23 +12,31 @@ import java.util.List;
  *            Generic OmibusDTO.
  */
 
-public abstract class AbstractFactory<T, D> {
+public abstract class AbstractFactory<T,D> {
+	
+	protected MasterWorkflow<T,D> workflow ;
+	
+	protected BaseTransactionManager<T,D> transactionManager; 
+	
+	/**
+	 * @return
+	 */
+	protected abstract MasterWorkflow<T,D> initiateWorkflow();
 
-	protected MasterWorkflow<T, D> workflow;
-
-	protected abstract MasterWorkflow<T, D> initiateWorkflow();
-
-	protected abstract BaseOmnibusDTO<T, D> initiateBaseOmnibusDTO() throws WorkflowException;
-
-	public List<T> startWorkflow(List<T> transactions) {
-
-		try {
+	/**
+	 * 
+	 * @return message
+	 */
+	public List<T> processRequest(List<?> inputList) {
+		
+		try {					
 			workflow = this.initiateWorkflow();
-			BaseOmnibusDTO<T, D> baseOmniBusDTO = this.initiateBaseOmnibusDTO();
-			return workflow.executeWorkflow(transactions, baseOmniBusDTO);
+			List<T> transactionList = transactionManager.getTransactionModel(inputList);
+			BaseOmnibusDTO<T,D> baseOmniBusDTO=transactionManager.initiateBaseOmnibusDTO();
+			workflow.executeWorkflow(transactionList,baseOmniBusDTO);
+			return transactionList;
 		} catch (WorkflowException e) {
 			return null;
 		}
 	}
-
 }

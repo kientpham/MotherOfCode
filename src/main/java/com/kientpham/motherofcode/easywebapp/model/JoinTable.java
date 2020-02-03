@@ -38,7 +38,7 @@ public class JoinTable implements Serializable{
 		return this.type;
 	}
 	
-	public String getName() {
+	public String getColumnName() {
 		return this.name;
 	}
 	

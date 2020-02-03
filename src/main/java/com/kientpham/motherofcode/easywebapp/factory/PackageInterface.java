@@ -10,6 +10,8 @@ public interface PackageInterface {
 	
 	String buildFilePath(List<String> domains);
 	
+	String buildFilePath(String domains);
+	
 	String buildPackageFooter();
 	 
 }

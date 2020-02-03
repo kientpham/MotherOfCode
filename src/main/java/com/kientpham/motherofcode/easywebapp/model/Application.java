@@ -27,8 +27,14 @@ public class Application implements Serializable{
 	@XmlAttribute(name = "appPath")
 	private String appPath;
 	
+	@XmlElement(name = "userinterface")
+	private UserInterface userinterface;
+	
 	@XmlElement(name = "service")
 	private List<Service> services;
+	
+	@XmlElement(name = "commonDomain")	
+	private String commonDomain;
 	
 	@Override
 	public String toString() {		
@@ -53,5 +59,13 @@ public class Application implements Serializable{
 	
 	public List<Service> getServices(){
 		return this.services;
+	}
+	
+	public UserInterface getUserInterface() {
+		return this.userinterface;
+	}
+	
+	public String getCommonDomain() {
+		return this.commonDomain;
 	}
 }

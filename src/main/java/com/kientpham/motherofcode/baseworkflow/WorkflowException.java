@@ -2,7 +2,7 @@ package com.kientpham.motherofcode.baseworkflow;
 
 /**
  * 
- * @author trungkienbk@gmail.com
+ * @author Kien Pham - trungkienbk@gmail.com
  *
  */
 public class WorkflowException extends Exception {

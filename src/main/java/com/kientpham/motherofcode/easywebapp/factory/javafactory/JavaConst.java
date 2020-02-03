@@ -1,8 +1,20 @@
 package com.kientpham.motherofcode.easywebapp.factory.javafactory;
 
 public class JavaConst {
+	
+	public static final String SRC_PATH="\\src\\main";
+
+	public static final String NEWLINE=";\r\n";
+	
+	public static final String IMPORT="import ";
+	
+	public static final String DATATABLE="datatable";
 
 	public static final String COMPONENTANNOTATED = "@Component\r\n";
+	
+	public static final String GETSETANNOTATED="@Getter\r\n" + "@Setter\r\n";
+	
+	public static final String RESTCONTROLLER= "@RestController\r\n";
 	
 	public static final String LIST = "import java.util.List;\r\n";
 	
@@ -10,7 +22,11 @@ public class JavaConst {
 	
 	public static final String HASHMAP ="import java.util.HashMap;\r\n";
 	
+	public static final String ITERATOR ="import java.util.Iterator;\r\n";
+	
 	public static final String MAP ="import java.util.Map;\r\n";
+	
+	public static final String MAP_ENTRY="import java.util.Map.Entry;\r\n"; 
 	
 	public static final String HASHSET ="import java.util.HashSet;\r\n";
 	
@@ -20,7 +36,9 @@ public class JavaConst {
 
 	public static final String LOMBOKGETSET = "import lombok.Getter;\r\n" + "import lombok.Setter;\r\n";
 
-	public static final String SERIALIZABLE = "import java.io.Serializable;\r\n";
+	public static final String IMPORT_SERIALIZABLE = "import java.io.Serializable;\r\n";
+	
+	public static final String SERIALIZABLE = "Serializable";
 
 	public static final String AUTOWIRED = "import org.springframework.beans.factory.annotation.Autowired;\r\n";
 	

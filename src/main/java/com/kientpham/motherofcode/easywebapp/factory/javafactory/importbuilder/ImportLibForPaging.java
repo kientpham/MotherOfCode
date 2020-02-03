@@ -1,68 +1,105 @@
 package com.kientpham.motherofcode.easywebapp.factory.javafactory.importbuilder;
 
+import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
 import com.kientpham.motherofcode.easywebapp.factory.ImportLibInterface;
+import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaCommon;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaConst;
-import com.kientpham.motherofcode.easywebapp.workflow.TransactionModel;
+import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
+import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
 
 public class ImportLibForPaging implements ImportLibInterface {
 
-	@Override
-	public String importForEntity(TransactionModel transaction) {
-		return "";
+	private String importForListPresenter(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return JavaConst.HASHMAP + JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getTablePage())
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getDataTablePresenter())
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPaginationCriteria())
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPagingInput())
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPagingOutput());
 	}
 
 	@Override
-	public String importForRepository(TransactionModel transaction) {
-		return "";
-	}
-	
-	@Override
-	public String importForRepositoryPaging(TransactionModel transaction) {
-		return JavaConst.PAGE + JavaConst.PAGEABLE +JavaConst.REPOSITORY
-				+JavaConst.QUERY + JavaConst.PARAM 
-				+ "import "+transaction.getFullDomainDTO().getEntityDomain()+";\r\n";
+	public String importForController(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return JavaCommon.importDomain("org.springframework.web.bind.annotation.ResponseBody")
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getTablePage())
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPaginationCriteria());
 	}
 
 	@Override
-	public String importForDBGatewayInterface(TransactionModel transaction) {
-		return getPageableCommon(transaction);
+	public String importForRepositoryPaging(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return JavaConst.PAGE + JavaConst.PAGEABLE + JavaConst.REPOSITORY + JavaConst.QUERY + JavaConst.PARAM
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFullDomainDTO(omnibusDTO.getTransaction().getEntity().getName()).getEntityDomain());
 	}
 
 	@Override
-	public String importForDBGateway(TransactionModel transaction) {
+	public String importForDBGatewayInterface(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return getPageableCommon(omnibusDTO);
+	}
+
+	@Override
+	public String importForDBGateway(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return JavaConst.SORT + JavaConst.PAGEREQUEST
-				+ "import "+transaction.getFullDomainDTO().getRepositoryPagingDomain()+";\r\n"
-				+ getPageableCommon(transaction);
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFullDomainDTO(omnibusDTO.getTransaction().getEntity().getName()).getRepositoryPagingDomain())
+				+ getPageableCommon(omnibusDTO);
 	}
 
 	@Override
-	public String importForBusinessObject(TransactionModel transaction) {
-		return getPageableCommon(transaction);
+	public String importForBusinessObject(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return getPageableCommon(omnibusDTO);
 	}
 
 	@Override
-	public String importForServiceInterface(TransactionModel transaction) {
-		return getPageableCommon(transaction);
+	public String importForReadService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return getPageableCommon(omnibusDTO);
 	}
 
 	@Override
-	public String importForServiceClass(TransactionModel transaction) {
-		return getPageableCommon(transaction);
+	public String importForReadServiceImpl(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return importForListPresenter(omnibusDTO) + getPageableCommon(omnibusDTO);
 	}
 
-	private String getPageableCommon(TransactionModel transaction) {
+	private String getPageableCommon(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return JavaConst.PAGE + JavaConst.PAGEABLE
-				+ "import "+transaction.getFullDomainDTO().getPagingInput()+";\r\n"
-				+ "import "+transaction.getFullDomainDTO().getPagingOutput()+";\r\n";
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPagingInput())
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPagingOutput());
 	}
 
 	@Override
-	public String importForPagingOutput(TransactionModel transaction) {
+	public String importForEntity(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return "";
 	}
 
 	@Override
-	public String importForPagingInput(TransactionModel transaction) {
+	public String importForRepository(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return "";
+	}
+
+	@Override
+	public String importForEditModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	@Override
+	public String importForTableModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	@Override
+	public String importForJoinList(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	@Override
+	public String importForWriteService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	@Override
+	public String importForWriteServiceImpl(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		// TODO Auto-generated method stub
 		return "";
 	}
 

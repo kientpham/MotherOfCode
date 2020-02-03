@@ -1,28 +1,40 @@
 package com.kientpham.motherofcode.easywebapp.factory;
 
-import com.kientpham.motherofcode.easywebapp.workflow.TransactionModel;
+import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
+import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
+import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
 
 public interface MethodBuilderInterface {
 	
-	public String buildMethodForPagingInput(TransactionModel transaction);
+	public String buildMethodForEntity(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 	
-	public String buildMethodForPagingOutput(TransactionModel transaction);
+	public String buildMethodForRepository(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+	
+	public String buildMethodForRepositoryPaging(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+	
+	public String buildMethodForDBGatewayInterface(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+	
+	public String buildMethodForDBGateway(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);	
+	
+	public String buildMethodForBusinessObject(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+	
+	public String buildMethodForReadService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+	
+	public String buildMethodForReadServiceImpl(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 
-	public String buildMethodForEntity(TransactionModel transaction);
+	String buildMethodForWriteService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 	
-	public String buildMethodForRepository(TransactionModel transaction);
+	public String buildMethodForWriteServiceImpl(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 	
-	public String buildMethodForRepositoryPaging(TransactionModel transaction);
+	String buildMethodForEditModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+
+	String buildMethodForTableModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+
+	String buildMethodForJoinList(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+
+	public String buildMethodForController(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+
 	
-	public String buildMethodForDBGatewayInterface(TransactionModel transaction);
-	
-	public String buildMethodForDBGateway(TransactionModel transaction);	
-	
-	public String buildMethodForBusinessObject(TransactionModel transaction);
-	
-	public String buildMethodForServiceInterface(TransactionModel transaction);
-	
-	public String buildMethodForServiceClass(TransactionModel transaction);	
 	
 	
 }

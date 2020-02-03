@@ -1,7 +1,9 @@
 package com.kientpham.motherofcode.baseworkflow;
 
+import java.util.List;
+
 /**
- * @author trungkienbk@gmail.com
+ * @author Kien Pham - trungkienbk@gmail.com
  *
  * @param <T>
  *            Generic Transaction Model.
@@ -9,7 +11,15 @@ package com.kientpham.motherofcode.baseworkflow;
  *            Generic OmibusDTO.
  */
 public interface BaseTransactionManager<T,D> {
-
+		
+	
+	public abstract BaseOmnibusDTO<T, D> initiateBaseOmnibusDTO() throws WorkflowException;
+	/**
+	 * @return
+	 * @throws WorkflowException
+	 */
+	public abstract List<T> getTransactionModel(List<?> inputList) throws WorkflowException;
+	
 	/**
 	 * @param transaction
 	 * @param omnibusDTO

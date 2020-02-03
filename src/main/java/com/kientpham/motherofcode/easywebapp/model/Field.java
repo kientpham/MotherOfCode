@@ -24,6 +24,18 @@ public class Field implements Serializable{
 	@XmlAttribute(name = "type")
 	private String type;
 	
+	@XmlAttribute(name = "nonviewable")
+	private String nonviewable;
+	
+	@XmlAttribute(name = "lookupType")
+	private String lookupType;
+	
+	@XmlAttribute(name = "sort")
+	private String sort;
+	
+	@XmlAttribute(name = "joinField")
+	private String joinField;
+	
 	public String getName() {
 		return this.name;
 	}
@@ -38,5 +50,21 @@ public class Field implements Serializable{
 	
 	public String getType() {
 		return this.type;
+	}
+	
+	public String getNonViewable() {
+		return this.nonviewable;
+	}
+	
+	public String getLookupType() {
+		return this.lookupType;
+	}
+	
+	public String getSort() {
+		return this.sort;
+	}
+	
+	public String getJoinField() {
+		return this.getJoinField();
 	}
 }

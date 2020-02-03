@@ -9,7 +9,8 @@ public class JavaPackageBuilder implements PackageInterface{
 
 	@Override
 	public String buildPackageName(String domainName) {
-		return "package "+ domainName + ";\r\n";
+		String packageName=domainName.substring(0,domainName.lastIndexOf('.'));
+		return "package "+ packageName+ ";\r\n";
 	}
 
 	@Override
@@ -51,6 +52,13 @@ public class JavaPackageBuilder implements PackageInterface{
 	@Override
 	public String buildPackageFooter() {		
 		return "\r\n}";
+	}
+
+	@Override
+	public String buildFilePath(String domains) {
+		String filePath = "\\src\\main\\java\\";
+		filePath +=domains.replace('.', File.separatorChar);	
+		return filePath+".java";
 	}
 
 }
