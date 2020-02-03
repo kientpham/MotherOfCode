@@ -4,7 +4,7 @@
   <artifactId>MotherOfCode</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>MotherOfCode</name>
-  <description>This tool is to generate code in all languages possbile</description>
+  <description>This tool is to generate code in all languages possible</description>
   <dependencies>		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -13,8 +13,7 @@
 			<scope>provided</scope>
 		</dependency>		        
 	</dependencies>
-  <build>
-    <sourceDirectory>src</sourceDirectory>
+  <build>    
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

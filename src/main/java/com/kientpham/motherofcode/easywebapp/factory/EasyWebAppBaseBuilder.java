@@ -3,18 +3,33 @@ package com.kientpham.motherofcode.easywebapp.factory;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kientpham.motherofcode.baseworkflow.BaseBuilder;
+import com.kientpham.motherofcode.baseworkflow.BaseBuilderPrePost;
+import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
+import com.kientpham.motherofcode.baseworkflow.WorkflowException;
+import com.kientpham.motherofcode.easywebapp.workflow.ShareDTO;
 import com.kientpham.motherofcode.easywebapp.workflow.TransactionModel;
-import com.kientpham.motherofcode.mainfactory.baseworkflow.BaseBuilder;
-import com.kientpham.motherofcode.mainfactory.baseworkflow.WorkflowException;
 
-public abstract class EasyWebAppBaseBuilder implements BaseBuilder<TransactionModel> {
+
+public abstract class EasyWebAppBaseBuilder implements BaseBuilder<TransactionModel,ShareDTO>, BaseBuilderPrePost<TransactionModel, ShareDTO> {
 
 	private PackageInterface packageBuilder;
 	
 	private StringBuilder code=new StringBuilder();
 
 	@Override
-	public void execute(TransactionModel transaction) throws WorkflowException {
+	public void execute(List<TransactionModel> transactionList, BaseOmnibusDTO<TransactionModel, ShareDTO> omniBusDTO)
+			throws WorkflowException {
+		this.execute(transactionList.get(0));		
+	}
+	
+	@Override
+	public void execute(BaseOmnibusDTO<TransactionModel, ShareDTO> omnibusDTO) throws WorkflowException {
+		TransactionModel transaction=omnibusDTO.getTransaction();
+		this.execute(transaction);
+	}	
+
+	private void execute(TransactionModel transaction) throws WorkflowException {	
 		code=new StringBuilder();
 		List<String> listDomain = buildListDomain(transaction);
 		String packageName = buildPackageName(transaction, listDomain);		
@@ -24,8 +39,9 @@ public abstract class EasyWebAppBaseBuilder implements BaseBuilder<TransactionMo
 		code.append(codeBody);
 		code.append(packageBuilder.buildPackageFooter());		
 		createOutputfile(transaction, listDomain);
-	}
+	}	
 
+	
 	private void createOutputfile(TransactionModel transaction, List<String> listDomain) {
 		//String filePath = transaction.getApplication().getAppPath()+ packageBuilder.buildFilePath(listDomain);		
 		//CommonUtils.writeToFile(code.toString(), filePath);		

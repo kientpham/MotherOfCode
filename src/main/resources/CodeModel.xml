@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<application name="EasyApp" title="Easy Web Application" domain="com.kientpham.webapp" appPath="C:\Users\jm838d\Documents\1. My Prj\MyToolkits\baseapp\base-webapp-autogen\src\main">	
+<application name="EasyApp" title="Easy Web Application" domain="com.kientpham.webapp" appPath="C:\Projects\Toolkits\easywebapp\src\main">	
 	<service name="userservice" >
 		<entityDomain>dto.entity</entityDomain>
 		<dbgatewayDomain>dbgateway</dbgatewayDomain>

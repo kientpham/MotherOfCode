@@ -7,12 +7,12 @@ import lombok.Setter;
 @Setter
 public class FullDomainDTO {
 	
+	private String pagingInput;
+	
+	private String pagingOutput;
+	
 	private String entityDomain;
 	
-	private String PagingInput;
-	
-	private String PagingOutput;
-
 	private String repositoryDomain;	
 	
 	private String repositoryPagingDomain;
