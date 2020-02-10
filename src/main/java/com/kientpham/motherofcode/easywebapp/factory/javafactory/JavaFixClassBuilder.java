@@ -20,7 +20,7 @@ public class JavaFixClassBuilder implements FixClassInterface {
 	@Override
 	public String buildPagingInput(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return String.format(
-				JavaConst.LOMBOKGETSET + JavaConst.GETSETANNOTATED + "public class %1$s<T>" + "{\r\n"
+				JavaConst.LOMBOKGETSET + JavaConst.GETSETANNOTATED + "public class %1$s" + "{\r\n"
 						+ "\tprivate int start;\r\n" + "	\r\n" + "	private int length;\r\n" + "	\r\n"
 						+ "	private String searchTerm;\r\n" + "	\r\n" + "	private String sortedColumnName;\r\n"
 						+ "	\r\n" + "	private String order;\r\n",
@@ -86,7 +86,7 @@ public class JavaFixClassBuilder implements FixClassInterface {
 	public String buildTablePage(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return String.format(JavaConst.LIST + JavaConst.MAP
 				+ JavaCommon.importDomain("com.fasterxml.jackson.annotation.JsonInclude") + JavaConst.LOMBOKGETSET
-				+ "\r\n" + JavaConst.GETSETANNOTATED + "public class %1$s<T>{\r\n\t" + "    /**\r\n"
+				+ "\r\n" + JavaConst.GETSETANNOTATED + "public class %1$s{\r\n\t" + "    /**\r\n"
 				+ "     * The draw counter that this object is a response to - from the draw parameter sent as part of the data request.\r\n"
 				+ "     */\r\n" + "    private int draw;\r\n" + "\r\n" + "    /**\r\n"
 				+ "     * Total records, before filtering.\r\n" + "     */\r\n" + "    private long recordsTotal;\r\n"

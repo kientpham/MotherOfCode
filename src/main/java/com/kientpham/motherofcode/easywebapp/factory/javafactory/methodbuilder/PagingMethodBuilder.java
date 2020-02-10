@@ -1,30 +1,26 @@
 package com.kientpham.motherofcode.easywebapp.factory.javafactory.methodbuilder;
 
-
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
 import com.kientpham.motherofcode.easywebapp.factory.MethodBuilderInterface;
 import com.kientpham.motherofcode.easywebapp.model.Entity;
 import com.kientpham.motherofcode.easywebapp.model.Field;
-import com.kientpham.motherofcode.easywebapp.model.FullDomainDTO;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
 import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
 import com.kientpham.motherofcode.utils.CommonUtils;
-import com.kientpham.motherofcode.utils.Const;
 import com.kientpham.motherofcode.utils.PackageUtils;
 
-
 public class PagingMethodBuilder implements MethodBuilderInterface {
-	
+
 	@Override
 	public String buildMethodForController(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		String entityName = omnibusDTO.getTransaction().getEntity().getName();
 		String listPresenter = CommonUtils
 				.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFullDomainDTO(entityName).getReadService());
-		return String.format("\r\n\t@RequestMapping(value = \"/%2$s_paginated\", method = RequestMethod.POST)\r\n"
+		return String.format("\r\n\t@RequestMapping(value = \"/tablepage\", method = RequestMethod.POST)\r\n"
 				+ "	@ResponseBody\r\n"
 				+ "	public TablePage list%1$ss(@RequestBody PaginationCriteria paginationCriteria) {		\r\n"
 				+ "		return %3$s.get%1$ssListPaging(paginationCriteria);\r\n" + "	}\r\n", entityName,
-				entityName.toLowerCase(), CommonUtils.getLowerCaseFirstChar(listPresenter));
+				entityName.toLowerCase(), CommonUtils.getLowerCaseFirstChar(listPresenter), omnibusDTO.getTransaction().getService().getName());
 	}
 
 	@Override
@@ -102,7 +98,8 @@ public class PagingMethodBuilder implements MethodBuilderInterface {
 	public String buildMethodForReadService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return String.format(
 				"\r\n\tpublic PagingOutputDTO<%1$s> search%1$s(PagingInputDTO pagingInput);\r\n" + "	\r\n"
-						+ "\tpublic Page<%1$s> getAll%1$s(Pageable pageRequest);\r\n\r\n",
+						+ "\tpublic Page<%1$s> getAll%1$s(Pageable pageRequest);\r\n\r\n"
+						+ "\tpublic TablePage get%1$ssListPaging(PaginationCriteria paginationCriteria);\r\n",
 				omnibusDTO.getTransaction().getEntity().getName());
 	}
 
@@ -136,18 +133,20 @@ public class PagingMethodBuilder implements MethodBuilderInterface {
 		String pagingInputDTO = PackageUtils
 				.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPagingInput());
 		String pagingOutputDTO = PackageUtils
-				.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPagingOutput());	
+				.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPagingOutput());
 		String businessDomainName = CommonUtils
 				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getBussinessDomain());
-		String lookupEntity=omnibusDTO.getSharedDTO().getLookUpEntityName();
-		String lookupService= CommonUtils.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFullDomainTable().get(lookupEntity).getReadService());
-				//.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getCategoryService());
+		String lookupEntity = omnibusDTO.getSharedDTO().getLookUpEntityName();
+		String lookupService = CommonUtils.getObjectNameFromDomain(
+				omnibusDTO.getSharedDTO().getFullDomainTable().get(lookupEntity).getReadService());
+		// .getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getCategoryService());
 		String dataTable = PackageUtils
 				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getTableModelDomain());
-		
-//		code +=String.format("\r\n\t@Autowired\r\n" + 
-//				"	private %1$s %2$s;\r\n", lookupService, CommonUtils.getLowerCaseFirstChar(lookupService));
-		
+
+		// code +=String.format("\r\n\t@Autowired\r\n" +
+		// " private %1$s %2$s;\r\n", lookupService,
+		// CommonUtils.getLowerCaseFirstChar(lookupService));
+
 		code += String.format("\r\n\tpublic TablePage get%1$ssListPaging(PaginationCriteria paginationCriteria) {\r\n"
 				+ "\r\n" + "		%2$s pagingInput = new %2$s();\r\n"
 				+ "		pagingInput.setStart(paginationCriteria.getStart());\r\n"
@@ -160,7 +159,8 @@ public class PagingMethodBuilder implements MethodBuilderInterface {
 				+ "				%5$s.getMapAll%8$s());\r\n" + "\r\n"
 				+ "		return DataTablePresenter.buildTablePage(list%1$sTable, paginationCriteria.getDraw(),\r\n"
 				+ "				(int) pagingOutput.getTotalElements());\r\n" + "	}", entityName, pagingInputDTO,
-				pagingOutputDTO, entityName.toLowerCase(), CommonUtils.getLowerCaseFirstChar(lookupService), dataTable, CommonUtils.getLowerCaseFirstChar(businessDomainName), lookupEntity);
+				pagingOutputDTO, entityName.toLowerCase(), CommonUtils.getLowerCaseFirstChar(lookupService), dataTable,
+				CommonUtils.getLowerCaseFirstChar(businessDomainName), lookupEntity);
 
 		code += String.format(
 				"\r\n\tprivate List<%3$s> convertList%1$sToDataTable(List<%1$s> %2$sList, Map<Integer, String> categoryMap) {\r\n"

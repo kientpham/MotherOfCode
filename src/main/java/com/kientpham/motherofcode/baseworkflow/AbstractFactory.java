@@ -32,7 +32,7 @@ public abstract class AbstractFactory<T,D> {
 		try {					
 			workflow = this.initiateWorkflow();
 			List<T> transactionList = transactionManager.getTransactionModel(inputList);
-			BaseOmnibusDTO<T,D> baseOmniBusDTO=transactionManager.initiateBaseOmnibusDTO();
+			BaseOmnibusDTO<T,D> baseOmniBusDTO=transactionManager.initiateBaseOmnibusDTO(transactionList);
 			workflow.executeWorkflow(transactionList,baseOmniBusDTO);
 			return transactionList;
 		} catch (WorkflowException e) {

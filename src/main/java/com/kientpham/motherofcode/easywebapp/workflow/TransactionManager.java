@@ -55,14 +55,15 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 	}
 
 	@Override
-	public BaseOmnibusDTO<TransactionModel, SharedDTO> initiateBaseOmnibusDTO() throws WorkflowException {
+	public BaseOmnibusDTO<TransactionModel, SharedDTO> initiateBaseOmnibusDTO(List<TransactionModel> transactionList) throws WorkflowException {
 
 		BaseOmnibusDTO<TransactionModel, SharedDTO> baseOmnibusDTO = new BaseOmnibusDTO<TransactionModel, SharedDTO>();
 		SharedDTO shareDTO = new SharedDTO();
 		shareDTO.setFixDomainDTO(new FixDomainDTO());
 		shareDTO.setApplication(application);
-		shareDTO.setCodeFactory(this.getCodeFactory(language, null));;
+		shareDTO.setCodeFactory(this.getCodeFactory(language, null));
 		shareDTO.setFullDomainTable(new HashMap<String, FullDomainDTO>());
+		shareDTO.setTransactionList(transactionList);
 		baseOmnibusDTO.setSharedDTO(shareDTO);
 		return baseOmnibusDTO;
 	}
@@ -78,6 +79,7 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 			for (Entity entity : entities) {
 				TransactionModel model = new TransactionModel();
 				model.setEntity(entity);
+				model.setService(service);
 				model.setCodeFactory(this.getCodeFactory(language, entity));
 				listTransaction.add(model);
 			}

@@ -69,12 +69,13 @@ public class LookupMethodBuilder extends JavaMethodBaseBuilder {
 
 	@Override
 	public String buildMethodForReadServiceImpl(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		String lookUpDomain=CommonUtils.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getBussinessDomain());
 		return super.buildMethodForReadServiceImpl(omnibusDTO)
 				+ String.format("\r\n\t@Override\r\n" + "	public Map<%1$s, String> getMapAll%2$s() {\r\n"
 						+ "		Map<%1$s, String> map = new HashMap<%1$s, String>();\r\n"
-						+ "		for (%2$s item : this.getAll%2$s()) {\r\n"
+						+ "		for (%2$s item : %3$s.findAll()) {\r\n"
 						+ "			map.put(item.getId(), item.getValue());\r\n" + "		}\r\n"
-						+ "		return map;\r\n" + "	}", idType, entityName);
+						+ "		return map;\r\n" + "	}", idType, entityName, CommonUtils.getLowerCaseFirstChar(lookUpDomain));
 	}
 
 }

@@ -21,8 +21,8 @@ public abstract class AbstractBuilder implements BaseBuilder<TransactionModel, S
 		code.append(packageBuilder.buildPackageName(fullDomain));
 		code.append(codeBody);
 		code.append(packageBuilder.buildPackageFooter());		
-//		String filePath = baseOmnibusDTO.getSharedDTO().getApplication().getAppPath()+ packageBuilder.buildFilePath(fullDomain);		
-//		CommonUtils.writeToFile(code.toString(), filePath);		
+		String filePath = baseOmnibusDTO.getSharedDTO().getApplication().getAppPath()+ packageBuilder.buildFilePath(fullDomain);		
+		CommonUtils.writeToFile(code.toString(), filePath);		
 		System.out.println(code.toString());		
 	}	
 	

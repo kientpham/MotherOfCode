@@ -1,33 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<application name="EasyApp" title="Easy Web Application" domain="com.kientpham.webapp" appPath="C:\Projects\Toolkits\easywebapp\src\main">	
-	<service name="userservice" >
-		<entityDomain>dto.entity</entityDomain>
+<application name="EasyApp" title="Easy Web Application" domain="com.kientpham.webapp" appPath="C:\Projects\Toolkits\easywebapp">
+	<userinterface domain="webappui" controller="controller"></userinterface>
+	<commonDomain>commonlib</commonDomain>	
+	<service name="shareservice" >
+		<entityDomain>entity</entityDomain>
 		<dbgatewayDomain>dbgateway</dbgatewayDomain>
 		<repositoryDomain>dbgateway.repository</repositoryDomain>
 		<businessDomain>domain</businessDomain>
-		<serviceDomain>service</serviceDomain>
-		<commonDomain>common</commonDomain>
-		<entity name="Group" table="\&quot;GROUP\&quot;">
+		<serviceDomain>service</serviceDomain>	
+		<entity name="Lookup" table="LOOKUP" type="LOOKUP">
+			<field name="id" identity="IDENTITY" column="LOOKUP_ID" type="Integer"/>
+			<field name="lookupType" column="LOOKUP_TYPE" type="String"/>
+			<field name="value" column="VALUE" type="String"/>
+			<field name="sequence" column="SEQUENCE" type="Integer"/>
+			<field name="description" column="DESCRIPTION" type="String"/>			
+		</entity>
+	</service>	
+	<service name="userservice" >
+		<entityDomain>entity</entityDomain>
+		<dbgatewayDomain>dbgateway</dbgatewayDomain>
+		<repositoryDomain>dbgateway.repository</repositoryDomain>
+		<businessDomain>domain</businessDomain>
+		<serviceDomain>service</serviceDomain>			
+		<entity name="Group" table="\&quot;GROUP\&quot;" titleFields="name">
 			<field name="id" identity="IDENTITY" column="GROUP_ID" type="Integer"/>
 			<field name="name" column="GROUP_NAME" type="String"/>
 			<field name="description" column="DESCRIPTION" type="String"/>
-			<field name="status" column="STATUS" type="Integer"/>
+			<field name="status" column="STATUS" type="Integer" lookupType="GROUP_STATUS"/>
 			<joinTable relation="@ManyToMany" type="User" field="users" name="USER_GROUP_JOIN" joinColumns="GROUP_ID" inverseJoinColumns = "USER_ID"/>
 			<joinTable relation="@ManyToMany" type="Permission" field="permissions" name="GROUP_PERMISSION_JOIN" joinColumns="GROUP_ID" inverseJoinColumns = "PERMISSION_ID"/>
 		</entity>	
-		<entity name="User" table="\&quot;USER\&quot;" hasPaging="true" type="USER">
-			<field name="id" identity="IDENTITY" column="USER_ID" type="Integer"/>
-			<field name="userName" column="USER_NAME" type="String"/>
-			<field name="password" column="PASSWORD" type="String"/>
-			<field name="firstName" column="FIRST_NAME" type="String"/>
-			<field name="lastName" column="LAST_NAME" type="String"/>
-			<field name="email" column="EMAIL" type="String"/>
-			<field name="address" column="ADDRESS" type="String"/>
-			<field name="status" column="STATUS" type="Integer"/>
-			<field name="userType" column="USER_TYPE" type="Integer"/>
+		<entity name="User" table="\&quot;USER\&quot;" hasPaging="true" type="USER" titleFields="username,firstName,lastName,email">
+			<field name="id" identity="IDENTITY" column="USER_ID" type="Integer" />
+			<field name="username" column="USER_NAME" type="String" sort="true"/>
+			<field name="password" column="PASSWORD" type="String" nonviewable="true"/>
+			<field name="firstName" column="FIRST_NAME" type="String" sort="true"/>
+			<field name="lastName" column="LAST_NAME" type="String" sort="true"/>
+			<field name="email" column="EMAIL" type="String" sort="true"/>
+			<field name="userType" column="USER_TYPE" type="Integer" lookupType="USER_TYPE" sort="true"/>
+			<field name="status" column="STATUS" type="Integer" lookupType="USER_STATUS" sort="true"/>			
+			<field name="address" column="ADDRESS" type="String" sort="true"/>						
 			<joinTable relation="@ManyToMany" type="Group" field="groups" name="USER_GROUP_JOIN" joinColumns="USER_ID" inverseJoinColumns = "GROUP_ID"/>			
 		</entity>				
-		<entity name="Permission" table="PERMISSION">
+		<entity name="Permission" table="PERMISSION" titleFields="name">
 			<field name="id" identity="IDENTITY" column="PERMISSION_ID" type="Integer"/>
 			<field name="name" column="NAME" type="String"/>			
 			<field name="toggle" column="TOGGLE" type="Boolean"/>
@@ -35,15 +50,23 @@
 			<field name="url" column="URL" type="String"/>
 			<field name="icon" column="ICON" type="String"/>
 			<field name="description" column="DESCRIPTION" type="String"/>
-			<field name="type" column="TYPE" type="Integer"/>
+			<field name="type" column="TYPE" type="Integer" lookupType="PERMISSION_TYPE"/>
 			<joinTable relation="@ManyToMany" type="Group" field="groups" name="GROUP_PERMISSION_JOIN" joinColumns="PERMISSION_ID" inverseJoinColumns = "GROUP_ID"/>			
-		</entity>
-		<entity name="Category" table="CATEGORY" type="CATEGORY">
-			<field name="id" identity="IDENTITY" column="CATEGORY_ID" type="Integer"/>
-			<field name="categoryGroup" column="CATEGORY_GROUP" type="String"/>
-			<field name="value" column="CATEGORY_VALUE" type="String"/>
-			<field name="order" column="GROUP_ORDER" type="Integer"/>
-			<field name="description" column="DESCRIPTION" type="String"/>			
-		</entity>
+		</entity>		
 	</service>
+	<service name="orderservice" >
+		<entityDomain>entity</entityDomain>
+		<dbgatewayDomain>dbgateway</dbgatewayDomain>
+		<repositoryDomain>dbgateway.repository</repositoryDomain>
+		<businessDomain>domain</businessDomain>
+		<serviceDomain>service</serviceDomain>			
+		<entity name="Order" table="\&quot;ORDER\&quot;" titleFields="title">
+			<field name="id" identity="IDENTITY" column="ORDER_ID" type="Integer"/>
+			<field name="title" column="ORDER_TITLE" type="String"/>			
+			<field name="status" column="STATUS" type="Integer" lookupType="ORDER_STATUS"/>
+			<field name="userId" column="USER_ID" type="Integer" joinField="userservice.User.id"/>
+			<joinTable relation="@ManyToOne" type="User" field="user" name="USER_ORDER_JOIN" joinColumns="ORDER_ID" inverseJoinColumns = "USER_ID"/>			
+		</entity>	
+	</service>
+	
 </application>

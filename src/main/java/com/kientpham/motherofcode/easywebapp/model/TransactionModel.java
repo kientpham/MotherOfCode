@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 public class TransactionModel {
 			
+	private Service service;
+	
 	private Entity entity;	
 	
 	private FullDomainDTO fullDomainDTO;
@@ -14,5 +16,7 @@ public class TransactionModel {
 	private CodeFactory codeFactory;
 	
 	private String filePath;
+	
+	
 	
 }

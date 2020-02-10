@@ -11,8 +11,9 @@ public class ClassNameBuilderBase implements ClassNameInterface {
 
 	@Override
 	public String buildClassController(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		return JavaConst.RESTCONTROLLER + className(
-				CommonUtils.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getControllerDomain()));
+		return JavaConst.RESTCONTROLLER + String.format("@RequestMapping(value=\"/%1$s/%2$ss\")\r\n",omnibusDTO.getTransaction().getService().getName(), omnibusDTO.getTransaction().getEntity().getName().toLowerCase())
+		+className(CommonUtils.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getControllerDomain()));
+		
 	}
 
 	@Override

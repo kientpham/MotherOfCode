@@ -27,7 +27,8 @@ public class ImportLibForPaging implements ImportLibInterface {
 	@Override
 	public String importForRepositoryPaging(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return JavaConst.PAGE + JavaConst.PAGEABLE + JavaConst.REPOSITORY + JavaConst.QUERY + JavaConst.PARAM
-				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFullDomainDTO(omnibusDTO.getTransaction().getEntity().getName()).getEntityDomain());
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO()
+						.getFullDomainDTO(omnibusDTO.getTransaction().getEntity().getName()).getEntityDomain());
 	}
 
 	@Override
@@ -37,8 +38,8 @@ public class ImportLibForPaging implements ImportLibInterface {
 
 	@Override
 	public String importForDBGateway(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		return JavaConst.SORT + JavaConst.PAGEREQUEST
-				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFullDomainDTO(omnibusDTO.getTransaction().getEntity().getName()).getRepositoryPagingDomain())
+		return JavaConst.SORT + JavaConst.PAGEREQUEST + JavaCommon.importDomain(omnibusDTO.getSharedDTO()
+				.getFullDomainDTO(omnibusDTO.getTransaction().getEntity().getName()).getRepositoryPagingDomain())
 				+ getPageableCommon(omnibusDTO);
 	}
 
@@ -49,7 +50,9 @@ public class ImportLibForPaging implements ImportLibInterface {
 
 	@Override
 	public String importForReadService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		return getPageableCommon(omnibusDTO);
+		return JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getTablePage())
+				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getPaginationCriteria())
+				+ getPageableCommon(omnibusDTO);
 	}
 
 	@Override

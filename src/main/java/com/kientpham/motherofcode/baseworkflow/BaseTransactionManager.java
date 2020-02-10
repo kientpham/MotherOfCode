@@ -13,7 +13,7 @@ import java.util.List;
 public interface BaseTransactionManager<T,D> {
 		
 	
-	public abstract BaseOmnibusDTO<T, D> initiateBaseOmnibusDTO() throws WorkflowException;
+	public abstract BaseOmnibusDTO<T, D> initiateBaseOmnibusDTO(List<T> transactionList) throws WorkflowException;
 	/**
 	 * @return
 	 * @throws WorkflowException

@@ -1,6 +1,7 @@
 package com.kientpham.motherofcode.easywebapp.factory.javafactory.importbuilder;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
@@ -60,10 +61,20 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 
 	@Override
 	public String importForBusinessObject(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-
-		return JavaConst.LIST + JavaConst.AUTOWIRED + JavaConst.COMPONENT
+		String code="";
+		List<JoinTable> listJoinTable=omnibusDTO.getTransaction().getEntity().getJoinTables();
+		if (listJoinTable!=null) {
+			for (JoinTable joinTable: listJoinTable) {
+				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
+					code = JavaConst.SET + JavaConst.ARRAYLIST + JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getJoinListDomain());
+					break;
+				}
+			}
+		}				
+		return code + JavaConst.LIST + JavaConst.AUTOWIRED + JavaConst.COMPONENT
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
-				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getDbGateway());
+				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getDbGateway())
+				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain());
 
 	}
 
@@ -75,10 +86,12 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 				code += JavaCommon.importDomain(
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getJoinListDomain());
 			}
-		}
+		}		
+		
 		return code + JavaConst.LIST
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getTableModelDomain())
+				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain())
 				+ Const.RETURN;
 	}
 
@@ -86,6 +99,7 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 	public String importForWriteService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return JavaConst.LIST
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
+				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain())
 				+ Const.RETURN;
 	}
 
@@ -103,7 +117,7 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 				code += JavaCommon.importDomain(
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getEntityDomain());
 				code += JavaCommon.importDomain(
-						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getReadService());
+						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getBussinessDomain());
 				code += JavaCommon.importDomain(
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getJoinListDomain());
 			}
@@ -150,17 +164,23 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain());
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getBussinessDomain());
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getReadService());
-		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain());
-		if (omnibusDTO.getTransaction().getEntity().getJoinTables() != null) {
-			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {
-				code += JavaCommon.importDomain(
-						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getEntityDomain());
-				code += JavaCommon.importDomain(
-						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getReadService());
-				code += JavaCommon.importDomain(
-						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getJoinListDomain());
+		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain());	
+		
+		List<JoinTable> listJoinTable=omnibusDTO.getTransaction().getEntity().getJoinTables();
+		if (listJoinTable!=null) {
+			for (JoinTable joinTable: listJoinTable) {
+				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
+					code += JavaConst.COLLECTORS + JavaCommon.importDomain(
+							omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getEntityDomain());
+					code += JavaCommon.importDomain(
+							omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getReadService());
+					code += JavaCommon.importDomain(
+							omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getJoinListDomain());
+					code += JavaCommon.importDomain(
+							omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getBussinessDomain());			
+				}
 			}
-		}
+		}	
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getTableModelDomain());
 		String lookupService = omnibusDTO.getSharedDTO()
 				.getFullDomainDTO(omnibusDTO.getSharedDTO().getLookUpEntityName()).getReadService();

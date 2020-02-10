@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.kientpham.motherofcode.utils.CommonUtils;
  
 @XmlRootElement(name = "entity")
 @XmlAccessorType(XmlAccessType.PROPERTY)
@@ -26,6 +28,9 @@ public class Entity implements Serializable{
 	
 	@XmlAttribute(name = "type")
 	private String type;
+	
+	@XmlAttribute(name = "titleFields")
+	private String titleFields;
 	
     @XmlElement(name = "field")
 	List<Field> fields;
@@ -55,5 +60,51 @@ public class Entity implements Serializable{
     
     public List<JoinTable> getJoinTables(){
     	return this.joinTables;
+    }
+    
+    public String getIdType() {
+    	for (Field field:this.fields) {
+    		if (!field.getIdentity().isEmpty()) { 
+    			return field.getType();
+    		}
+    	}
+    	return this.fields.get(0).getType();
+    }
+    
+    public String getIdFieldName() {
+    	for (Field field:this.fields) {
+    		if (!field.getIdentity().isEmpty()) { 
+    			return field.getName();
+    		}
+    	}
+    	return this.fields.get(0).getName();
+    }  
+    
+    public String getTitleField() {
+    	if (!this.titleFields.isEmpty())
+    		return this.titleFields;
+    	return this.fields.get(1).getName();
+	}
+
+    
+//    public String getTitleField() {
+//    	String entityName=CommonUtils.getLowerCaseFirstChar(this.getName());
+//    	if (!this.titleFields.isEmpty()) {
+//    		String[] titleList=titleFields.split(",");
+//    		String returnString="";    		
+//    		for (int i=0;i<titleList.length;i++) {
+//    			if (i!=0) {
+//    				returnString+="+";
+//    			}
+//    			returnString+=String.format("%1$s.get%2$s()", entityName, CommonUtils.getUpperCaseFirstChar(titleList[i]));
+//    			
+//    		}
+//    		return returnString;
+//    	}
+//    	return String.format("%1$s.get%2$s()", entityName, CommonUtils.getUpperCaseFirstChar(this.fields.get(1).getName()));
+//    }
+    
+    public boolean hasJoinTable() {
+    	return (this.joinTables ==null || this.joinTables.size()==0)?false:true; 
     }
 }

@@ -2,6 +2,10 @@ package com.kientpham.motherofcode.easywebapp.factory.javafactory;
 
 public class JavaConst {
 	
+	public static final String MANYTOMANY="@ManyToMany";
+	
+	public static final String ONETOMANY="@OneToMany";
+	
 	public static final String SRC_PATH="\\src\\main";
 
 	public static final String NEWLINE=";\r\n";
@@ -23,6 +27,8 @@ public class JavaConst {
 	public static final String HASHMAP ="import java.util.HashMap;\r\n";
 	
 	public static final String ITERATOR ="import java.util.Iterator;\r\n";
+	
+	public static final String COLLECTORS = "import java.util.stream.Collectors;";
 	
 	public static final String MAP ="import java.util.Map;\r\n";
 	
