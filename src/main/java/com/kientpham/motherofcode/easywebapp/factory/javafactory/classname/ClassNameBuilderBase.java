@@ -1,7 +1,7 @@
 package com.kientpham.motherofcode.easywebapp.factory.javafactory.classname;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
-import com.kientpham.motherofcode.easywebapp.factory.ClassNameInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.ClassNameInterface;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaConst;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
 import com.kientpham.motherofcode.easywebapp.model.TransactionModel;

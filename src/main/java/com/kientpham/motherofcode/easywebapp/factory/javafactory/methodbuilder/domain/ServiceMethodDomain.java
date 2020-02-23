@@ -28,7 +28,7 @@ public class ServiceMethodDomain {
 		entityName = omnibusDTO.getTransaction().getEntity().getName();
 		editDomain = CommonUtils
 				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain());
-		idType = omnibusDTO.getTransaction().getEntity().getIdType();
+		idType = omnibusDTO.getTransaction().getEntity().getIDField().getType();
 		businessDomainName = CommonUtils
 				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getBussinessDomain());
 		lookupEntity = omnibusDTO.getSharedDTO().getLookUpEntityName();
@@ -74,17 +74,23 @@ public class ServiceMethodDomain {
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getBussinessDomain());
 				String joinEntityObject = CommonUtils.getObjectNameFromDomain(
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getEntityDomain());
-				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)
-						|| joinTable.getRelation().equals(JavaConst.ONETOMANY)) {
+				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
 					Entity joinEntity = omnibusDTO.getSharedDTO().getEntityByName(joinEntityObject);
+					String condition="";
+					if (omnibusDTO.getTransaction().getEntity().getIDField().getType().equals(JavaConst.STRING)) {
+						condition=String.format("!%1$sId.isEmpty()", CommonUtils.getLowerCaseFirstChar(entityName));
+					}else {
+						condition=String.format("%1$sId !=null", CommonUtils.getLowerCaseFirstChar(entityName));
+					}
+					
 					code += this.getPrivateField(joinDomainObject) + String.format(
 							"\r\n\t@Override\r\n\tpublic List<%1$s> get%1$s(%7$s %4$sId) {\r\n"
-									+ "		if (%4$sId!=null) {\r\n"
+									+ "		if (%9$s) {\r\n"
 									+ "\t\t\treturn %3$s.get%1$s(%5$s.findById(%4$sId).get%6$ss().stream().map(%6$s::get%8$s).collect(Collectors.toSet()));\r\n"
 									+ "		}\r\n" + "		return %3$s.get%1$s(null);\r\n" + "	}\r\n",
 							joinType, joinDomainObject, CommonUtils.getLowerCaseFirstChar(joinDomainObject),
-							entityName.toLowerCase(), CommonUtils.getLowerCaseFirstChar(businessDomainName),
-							joinEntityObject, idType, CommonUtils.getUpperCaseFirstChar(joinEntity.getIdFieldName()));
+							CommonUtils.getLowerCaseFirstChar(entityName), CommonUtils.getLowerCaseFirstChar(businessDomainName),
+							joinEntityObject, idType, CommonUtils.getUpperCaseFirstChar(joinEntity.getIDField().getName()), condition);
 				}
 			}
 		}
@@ -126,9 +132,9 @@ public class ServiceMethodDomain {
 		String editModelObject = CommonUtils.getLowerCaseFirstChar(editModelClass);
 		return String.format(
 				"\r\n\t@Override\r\n\tpublic %3$s save%1$s(%3$s %4$s) {\r\n" + "\t\t%1$s %2$s=%5$s.get%1$sEntity(%4$s);\r\n"
-						+ "\t\t%6$s;" + "\t\t%5$s.save(%2$s);\r\n"
+						+ "\t\t%6$s" + "\t\t%5$s.save(%2$s);\r\n"
 						+ "\t\treturn %4$s;\r\n" + "\t}",
-				entityName, entityName.toLowerCase(), editModelClass, editModelObject,
+				entityName, CommonUtils.getLowerCaseFirstChar(entityName), editModelClass, editModelObject,
 				CommonUtils.getLowerCaseFirstChar(businessDomainName), this.buildGetListJoinEntity(omnibusDTO));
 	}
 
@@ -142,9 +148,12 @@ public class ServiceMethodDomain {
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getBussinessDomain());
 				String joinEntityObject = CommonUtils.getObjectNameFromDomain(
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getEntityDomain());
-				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)
-						|| joinTable.getRelation().equals(JavaConst.ONETOMANY)) {
+				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
 					code += String.format("%1$s.set%2$ss(%3$s.findByListIds(%4$s.get%2$ss()));\r\n",
+							CommonUtils.getLowerCaseFirstChar(entityName), joinEntityObject, CommonUtils.getLowerCaseFirstChar(joinDomainObject),
+							editModelClass);
+				}else if (joinTable.getRelation().equals(JavaConst.ONETOMANY)) {
+					code += String.format("%1$s.set%2$s(%3$s.findByListIds(%4$s.get%2$s()));\r\n",
 							CommonUtils.getLowerCaseFirstChar(entityName), joinEntityObject, CommonUtils.getLowerCaseFirstChar(joinDomainObject),
 							editModelClass);
 				}

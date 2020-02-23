@@ -1,7 +1,7 @@
 package com.kientpham.motherofcode.easywebapp.factory.javafactory.importbuilder;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
-import com.kientpham.motherofcode.easywebapp.factory.ImportLibInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.ImportLibInterface;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaCommon;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaConst;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
@@ -9,6 +9,10 @@ import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
 
 public class ImportLibForPaging implements ImportLibInterface {
 
+	private String importUUID(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {		
+		return (omnibusDTO.getTransaction().getEntity().getIDField().getType().equals("UUID"))? JavaConst.ImportUUID:"";
+	}
+	
 	private String importForListPresenter(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return JavaConst.HASHMAP + JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getTablePage())
 				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getDataTablePresenter())
@@ -28,7 +32,7 @@ public class ImportLibForPaging implements ImportLibInterface {
 	public String importForRepositoryPaging(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return JavaConst.PAGE + JavaConst.PAGEABLE + JavaConst.REPOSITORY + JavaConst.QUERY + JavaConst.PARAM
 				+ JavaCommon.importDomain(omnibusDTO.getSharedDTO()
-						.getFullDomainDTO(omnibusDTO.getTransaction().getEntity().getName()).getEntityDomain());
+						.getFullDomainDTO(omnibusDTO.getTransaction().getEntity().getName()).getEntityDomain())+this.importUUID(omnibusDTO);
 	}
 
 	@Override

@@ -27,6 +27,12 @@ public class Application implements Serializable{
 	@XmlAttribute(name = "appPath")
 	private String appPath;
 	
+	@XmlAttribute(name = "database")
+	private String database;
+	
+	@XmlAttribute(name = "dbms")
+	private String dbms;
+	
 	@XmlElement(name = "userinterface")
 	private UserInterface userinterface;
 	
@@ -43,6 +49,14 @@ public class Application implements Serializable{
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public String getDbms() {
+		return this.dbms;
+	}
+	
+	public String getDatabase() {
+		return this.database;
 	}
 	
 	public String getTitle() {

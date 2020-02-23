@@ -6,6 +6,7 @@ import com.kientpham.motherofcode.easywebapp.factory.commonbuilder.EditModelBuil
 import com.kientpham.motherofcode.easywebapp.factory.commonbuilder.JoinListBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.commonbuilder.TableModelBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.fixbuilder.ColumnBuilder;
+import com.kientpham.motherofcode.easywebapp.factory.fixbuilder.DateStringUtilsBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.fixbuilder.DataTablePresenter;
 import com.kientpham.motherofcode.easywebapp.factory.fixbuilder.FullDomainBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.fixbuilder.OrderingCriteria;
@@ -23,10 +24,10 @@ import com.kientpham.motherofcode.easywebapp.factory.servicebuilder.EntityBuilde
 import com.kientpham.motherofcode.easywebapp.factory.servicebuilder.RepositoryBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.servicebuilder.WriteServiceBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.servicebuilder.WriteServiceImplBuilder;
+import com.kientpham.motherofcode.easywebapp.factory.uibuilder.EditPageBuilder;
+import com.kientpham.motherofcode.easywebapp.factory.uibuilder.ListPageBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.servicebuilder.ReadServiceImplBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.servicebuilder.ReadServiceBuilder;
-import com.kientpham.motherofcode.easywebapp.factory.uibuilder.EditPresenterBuilder;
-import com.kientpham.motherofcode.easywebapp.factory.uibuilder.ListPresenterBuilder;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
 import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
 
@@ -45,6 +46,8 @@ public class EasyWebAppFactory extends AbstractFactory<TransactionModel, SharedD
 	private TablePage tablePage=new TablePage();
 	
 	private DataTablePresenter dataTablePresenter=new DataTablePresenter();
+	
+	private DateStringUtilsBuilder commonUtilsBuilder=new DateStringUtilsBuilder();
 	
 	private PagingInputBuilder pagingInputBuilder = new PagingInputBuilder();
 	
@@ -76,11 +79,11 @@ public class EasyWebAppFactory extends AbstractFactory<TransactionModel, SharedD
 	
 	private JoinListBuilder joinListBuilder=new JoinListBuilder();
 	
-	private EditPresenterBuilder editPresenterBuilder=new EditPresenterBuilder();
-	
-	private ListPresenterBuilder listPresenterBuilder=new ListPresenterBuilder();
-	
 	private ControllerBuilder controllerBuilder= new ControllerBuilder();
+	
+	private ListPageBuilder listPageBuilder=new ListPageBuilder();
+	
+	private EditPageBuilder editPageBuilder=new EditPageBuilder();
 	
 	@Override
 	protected MasterWorkflow<TransactionModel, SharedDTO> initiateWorkflow() {
@@ -96,6 +99,7 @@ public class EasyWebAppFactory extends AbstractFactory<TransactionModel, SharedD
 		workflow.setPreExecuteBuilder(searchCriteria);
 		workflow.setPreExecuteBuilder(tablePage);
 		workflow.setPreExecuteBuilder(dataTablePresenter);
+		workflow.setPreExecuteBuilder(commonUtilsBuilder);
 		
 		workflow.setFirstBuilder(entityBuilder);
 		workflow.setNextBuilder(crudRepositoryBuilder);
@@ -110,10 +114,9 @@ public class EasyWebAppFactory extends AbstractFactory<TransactionModel, SharedD
 		workflow.setNextBuilder(readServiceImplBuilder);
 		workflow.setNextBuilder(writeServiceBuilder);
 		workflow.setNextBuilder(writeServiceImplBuilder);
-
-//		workflow.setNextBuilder(editPresenterBuilder);
-//		workflow.setNextBuilder(listPresenterBuilder);
 		workflow.setNextBuilder(controllerBuilder);
+		workflow.setNextBuilder(listPageBuilder);
+		workflow.setNextBuilder(editPageBuilder);
 		return workflow;
 	}
 

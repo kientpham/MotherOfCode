@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
-import com.kientpham.motherofcode.easywebapp.factory.ImportLibInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.ImportLibInterface;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaCommon;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaConst;
+import com.kientpham.motherofcode.easywebapp.model.Entity;
 import com.kientpham.motherofcode.easywebapp.model.JoinTable;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
 import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
@@ -20,6 +21,19 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 		String sImports = "import javax.persistence.Entity;\r\n" + "import javax.persistence.Column;\r\n"
 				+ "import javax.persistence.GeneratedValue;\r\n" + "import javax.persistence.GenerationType;\r\n"
 				+ "import javax.persistence.Id;\r\n" + "import javax.persistence.Table;\r\n\r\n";
+
+		if (omnibusDTO.getTransaction().getEntity().hasFieldType(Const.UUID)) {
+			sImports += JavaConst.ImportUUID;
+		}
+		if (omnibusDTO.getTransaction().getEntity().hasFieldType(Const.DATE)) {
+			sImports += JavaConst.DATE;
+		}
+		if (omnibusDTO.getTransaction().getEntity().hasFieldType(Const.CURRENCY)) {
+			sImports += JavaConst.CURRENCY;
+		} 		
+		if (omnibusDTO.getTransaction().getEntity().hasFieldType(Const.LOCALDATETIME)) {
+			sImports += JavaConst.LOCALDATETIME;
+		} 
 		Set<String> relationSet = new HashSet<String>();
 		if (omnibusDTO.getTransaction().getEntity().getJoinTables() != null) {
 			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {
@@ -41,14 +55,17 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 
 	@Override
 	public String importForRepository(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+
 		return JavaConst.CRUDREPOSITORY
-				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain());
+				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
+				+ this.importUUID(omnibusDTO);
 	}
 
 	@Override
 	public String importForDBGatewayInterface(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		return JavaConst.LIST
-				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain());
+				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
+				+ this.importUUID(omnibusDTO);
 	}
 
 	@Override
@@ -56,21 +73,35 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 		return JavaConst.LIST + JavaConst.AUTOWIRED + JavaConst.COMPONENT
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getRepositoryDomain())
-				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getDbGateway());
+				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getDbGateway())
+				+ this.importUUID(omnibusDTO);
 	}
 
 	@Override
 	public String importForBusinessObject(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		String code="";
-		List<JoinTable> listJoinTable=omnibusDTO.getTransaction().getEntity().getJoinTables();
-		if (listJoinTable!=null) {
-			for (JoinTable joinTable: listJoinTable) {
+		String code = "";
+		Entity entity = omnibusDTO.getTransaction().getEntity();
+
+		if (entity.hasJoinTable()) {
+			for (JoinTable joinTable : entity.getJoinTables()) {
 				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
-					code = JavaConst.SET + JavaConst.ARRAYLIST + JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getJoinListDomain());
+					code = JavaConst.SET + JavaConst.ARRAYLIST + JavaCommon
+							.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getJoinListDomain());
 					break;
 				}
 			}
-		}				
+		}
+
+		if ((entity.getIDField().getType().equals(JavaConst.STRING)
+				&& entity.getIDField().getFieldType().contains(Const.RANDOM)) || entity.hasCreatedOrLastUpdated()) {
+			code += JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getDateStringUtils());
+		}
+
+		if (entity.getIDField().getType().equals(Const.UUID) || (entity.getIDField().getType().equals(JavaConst.STRING)
+				&& entity.getIDField().getFieldType().equals(Const.UUID))) {
+			code += JavaConst.ImportUUID;
+		}
+
 		return code + JavaConst.LIST + JavaConst.AUTOWIRED + JavaConst.COMPONENT
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getDbGateway())
@@ -80,19 +111,19 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 
 	@Override
 	public String importForReadService(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		String code="";
+		String code = "";
 		if (omnibusDTO.getTransaction().getEntity().getJoinTables() != null) {
-			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {				
+			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {
 				code += JavaCommon.importDomain(
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getJoinListDomain());
 			}
-		}		
-		
+		}
+
 		return code + JavaConst.LIST
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getTableModelDomain())
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain())
-				+ Const.RETURN;
+				+ this.importUUID(omnibusDTO) + Const.RETURN;
 	}
 
 	@Override
@@ -100,13 +131,13 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 		return JavaConst.LIST
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain())
-				+ Const.RETURN;
+				+ this.importUUID(omnibusDTO) + Const.RETURN;
 	}
 
 	@Override
 	public String importForWriteServiceImpl(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		String code = JavaConst.LIST + JavaConst.ARRAYLIST + JavaConst.AUTOWIRED + JavaConst.COMPONENT + JavaConst.MAP
-				+ "\r\n";
+				+ this.importUUID(omnibusDTO) + "\r\n";
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain());
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getBussinessDomain());
 
@@ -138,15 +169,43 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 
 	@Override
 	public String importForEditModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		return JavaConst.LIST
+		String code = "";
+		if (omnibusDTO.getTransaction().getEntity().hasFieldType(Const.DATE)) {
+			code += JavaConst.DATE;
+		}
+		if (omnibusDTO.getTransaction().getEntity().hasFieldType(Const.CURRENCY)) {
+			code  += JavaConst.CURRENCY;
+		}
+		if (omnibusDTO.getTransaction().getEntity().hasFieldType(Const.LOCALDATETIME)) {
+			code+= JavaConst.LOCALDATETIME;
+		} 
+		if (omnibusDTO.getTransaction().getEntity().hasFieldType(Const.UUID)) {
+			code += JavaConst.ImportUUID;
+		} else if (omnibusDTO.getTransaction().getEntity().hasJoinTable()) {
+			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {
+				Entity joinEntity = omnibusDTO.getSharedDTO().getEntityByName(joinTable.getType());
+				if ((joinTable.getRelation().equals(JavaConst.ONETOMANY)
+						|| joinTable.getRelation().equals(JavaConst.MANYTOMANY))
+						&& joinEntity.getIDField().getType().equals(Const.UUID)) {
+					code += JavaConst.ImportUUID;
+					break;
+				}
+			}
+		}
+
+		return code + JavaConst.LIST
 				+ JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
-				+ JavaConst.LOMBOKGETSET;
+				+ JavaConst.LOMBOKGETSET + this.importUUID(omnibusDTO);
 	}
 
 	@Override
 	public String importForTableModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		return JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain()) + JavaConst.MAP
-				+ JavaConst.LOMBOKGETSET;
+		String code="";
+		if (omnibusDTO.getTransaction().getEntity().hasFieldType(Const.DATE)) {
+			code += JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getDateStringUtils());
+		}
+		return code+JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain()) + JavaConst.MAP
+				+ JavaConst.LOMBOKGETSET + this.importUUID(omnibusDTO);
 	}
 
 	@Override
@@ -154,33 +213,33 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 		if (omnibusDTO.getTransaction().getEntity().getJoinTables() == null)
 			return "";
 		return JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain())
-				+ JavaConst.IMPORT_SERIALIZABLE + JavaConst.LOMBOKGETSET;
+				+ JavaConst.IMPORT_SERIALIZABLE + JavaConst.LOMBOKGETSET + this.importUUID(omnibusDTO);
 	}
 
 	@Override
 	public String importForReadServiceImpl(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		String code = JavaConst.LIST + JavaConst.ARRAYLIST + JavaConst.AUTOWIRED + JavaConst.COMPONENT + JavaConst.MAP
-				+ "\r\n";
+				+ this.importUUID(omnibusDTO) + "\r\n";
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEntityDomain());
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getBussinessDomain());
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getReadService());
-		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain());	
-		
-		List<JoinTable> listJoinTable=omnibusDTO.getTransaction().getEntity().getJoinTables();
-		if (listJoinTable!=null) {
-			for (JoinTable joinTable: listJoinTable) {
+		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain());
+
+		List<JoinTable> listJoinTable = omnibusDTO.getTransaction().getEntity().getJoinTables();
+		if (listJoinTable != null) {
+			for (JoinTable joinTable : listJoinTable) {
 				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
 					code += JavaConst.COLLECTORS + JavaCommon.importDomain(
 							omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getEntityDomain());
 					code += JavaCommon.importDomain(
 							omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getReadService());
-					code += JavaCommon.importDomain(
-							omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getJoinListDomain());
-					code += JavaCommon.importDomain(
-							omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getBussinessDomain());			
+					code += JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFullDomainTable()
+							.get(joinTable.getType()).getJoinListDomain());
+					code += JavaCommon.importDomain(omnibusDTO.getSharedDTO().getFullDomainTable()
+							.get(joinTable.getType()).getBussinessDomain());
 				}
 			}
-		}	
+		}
 		code += JavaCommon.importDomain(omnibusDTO.getTransaction().getFullDomainDTO().getTableModelDomain());
 		String lookupService = omnibusDTO.getSharedDTO()
 				.getFullDomainDTO(omnibusDTO.getSharedDTO().getLookUpEntityName()).getReadService();
@@ -192,7 +251,7 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 
 	@Override
 	public String importForController(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		String code = JavaConst.LIST + "\r\n" + JavaConst.AUTOWIRED;
+		String code = JavaConst.LIST + "\r\n" + JavaConst.AUTOWIRED + this.importUUID(omnibusDTO);
 		code += JavaCommon.importDomain("org.springframework.http.HttpStatus");
 		code += JavaCommon.importDomain("org.springframework.http.ResponseEntity");
 		code += JavaCommon.importDomain("org.springframework.web.bind.annotation.RequestBody");
@@ -210,6 +269,12 @@ public class ImportLibBuilderBase implements ImportLibInterface {
 			}
 		}
 		return code;
+	}
+
+	private String importUUID(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return (omnibusDTO.getTransaction().getEntity().getIDField().getType().equals(Const.UUID))
+				? JavaConst.ImportUUID
+				: "";
 	}
 
 }

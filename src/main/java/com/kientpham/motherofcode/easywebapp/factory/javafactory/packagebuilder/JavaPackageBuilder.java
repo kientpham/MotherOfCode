@@ -3,12 +3,14 @@ package com.kientpham.motherofcode.easywebapp.factory.javafactory.packagebuilder
 import java.io.File;
 import java.util.List;
 
-import com.kientpham.motherofcode.easywebapp.factory.PackageInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.PackageInterface;
 
 public class JavaPackageBuilder implements PackageInterface{
 
 	@Override
 	public String buildPackageName(String domainName) {
+		if (domainName.isEmpty())
+			return "";
 		String packageName=domainName.substring(0,domainName.lastIndexOf('.'));
 		return "package "+ packageName+ ";\r\n";
 	}

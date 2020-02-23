@@ -23,4 +23,6 @@ public class FixDomainDTO {
 	
 	private String dataTablePresenter;
 	
+	private String dateStringUtils;
+	
 }

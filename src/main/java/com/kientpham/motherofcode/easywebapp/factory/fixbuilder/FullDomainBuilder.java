@@ -27,9 +27,10 @@ public class FullDomainBuilder implements BaseBuilder<TransactionModel, SharedDT
 
 	private void buildFullFixDomain(BaseOmnibusDTO<TransactionModel, SharedDTO> omniBusDTO) {
 		FixDomainDTO fixDomainDTO = new FixDomainDTO();
-		//String commonDomain = omniBusDTO.getSharedDTO().getApplication().getCommonDomain();
 		fixDomainDTO.setDataTablePresenter(CommonUtils.combineTwoStringWithDot(
 				CommonUtils.combineTwoStringWithDot(commonDomain, Const.UTILS), "DataTablePresenter"));
+		fixDomainDTO.setDateStringUtils(CommonUtils.combineTwoStringWithDot(
+				CommonUtils.combineTwoStringWithDot(commonDomain, Const.UTILS), "DateStringUtils"));
 		fixDomainDTO.setColumnClass(getDomainForPagingClasses(commonDomain, "Column"));
 		fixDomainDTO.setOrderingCriteria(getDomainForPagingClasses(commonDomain, "OrderingCriteria"));
 		fixDomainDTO.setPaginationCriteria(getDomainForPagingClasses(commonDomain, "PaginationCriteria"));

@@ -3,7 +3,7 @@ package com.kientpham.motherofcode.easywebapp.factory.javafactory.methodbuilder;
 import java.util.List;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
-import com.kientpham.motherofcode.easywebapp.factory.MethodBuilderInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.MethodBuilderInterface;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaConst;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.methodbuilder.domain.ServiceMethodDomain;
 import com.kientpham.motherofcode.easywebapp.model.Entity;
@@ -12,6 +12,7 @@ import com.kientpham.motherofcode.easywebapp.model.JoinTable;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
 import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
 import com.kientpham.motherofcode.utils.CommonUtils;
+import com.kientpham.motherofcode.utils.Const;
 import com.kientpham.motherofcode.utils.PackageUtils;
 
 public class JavaMethodBaseBuilder implements MethodBuilderInterface {
@@ -31,7 +32,7 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 
 		String code = this.getField(readService) + this.getField(writeService);
 
-		String idType = omnibusDTO.getTransaction().getEntity().getIdType();
+		String idType = omnibusDTO.getTransaction().getEntity().getIDField().getType();
 
 		String entityName = omnibusDTO.getTransaction().getEntity().getName();
 		code += String.format("\r\n\t@RequestMapping(value=\"/%3$s\", method=RequestMethod.GET)\r\n"
@@ -41,8 +42,7 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {
 				String joinListType = CommonUtils.getObjectNameFromDomain(
 						omnibusDTO.getSharedDTO().getFullDomainDTO(joinTable.getType()).getJoinListDomain());
-				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)
-						|| joinTable.getRelation().equals(JavaConst.ONETOMANY)) {
+				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
 					code += String.format(
 							"\r\n\t@RequestMapping(value=\"/%4$s\", method=RequestMethod.GET)\r\n"
 									+ "	public List<%3$s> get%3$s(@RequestParam %5$s id){\r\n"
@@ -57,16 +57,14 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 						+ "	public ResponseEntity<%2$s> get%1$s(@RequestParam %4$s id){\r\n"
 						+ "		return new ResponseEntity<%2$s>(%3$s.get%2$sById(id),HttpStatus.OK);\r\n" + "	}\r\n",
 				editModel.toLowerCase(), editModel, CommonUtils.getLowerCaseFirstChar(readService), idType);
-		
-		 code += String.format(
-		 "\r\n\t@RequestMapping(value=\"/%5$s\", method=RequestMethod.POST)\r\n"
-		 + "\tpublic String save%1$s(@RequestBody(required=true) %2$s %4$s) {\r\n"
-		 + "\t\t%3$s.save%1$s(%4$s);\r\n"
-		 + "\t\treturn \"Saved Successfully!\";\r\n"
-		 + "\t}\r\n",
-		 entityName, editModel, CommonUtils.getLowerCaseFirstChar(writeService),
-		 CommonUtils.getLowerCaseFirstChar(editModel), editModel.toLowerCase());
-		
+
+		code += String.format(
+				"\r\n\t@RequestMapping(value=\"/%5$s\", method=RequestMethod.POST)\r\n"
+						+ "\tpublic String save%1$s(@RequestBody(required=true) %2$s %4$s) {\r\n"
+						+ "\t\t%3$s.save%1$s(%4$s);\r\n" + "\t\treturn \"Saved Successfully!\";\r\n" + "\t}\r\n",
+				entityName, editModel, CommonUtils.getLowerCaseFirstChar(writeService),
+				CommonUtils.getLowerCaseFirstChar(editModel), editModel.toLowerCase());
+
 		code += String.format(
 				"\r\n\t@RequestMapping(method=RequestMethod.DELETE)\r\n"
 						+ "	public String delete%1$s(@RequestBody(required=true) %3$s id) {\r\n"
@@ -85,16 +83,16 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 	public String buildMethodForJoinList(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		if (omnibusDTO.getTransaction().getEntity().getJoinTables() == null)
 			return "";
-		Entity entity=omnibusDTO.getTransaction().getEntity();
-		String titleField="";
-		for (String title:entity.getTitleField().split(",")) {
-			titleField+=String.format("\r\n\tprivate String %1$s;\r\n", title);
+		Entity entity = omnibusDTO.getTransaction().getEntity();
+		String titleField = "";
+		for (String title : entity.getTitleField().split(",")) {
+			titleField += String.format("\r\n\tprivate String %1$s;\r\n", title);
 		}
-		
+
 		return String.format(
-				"\r\n\tprivate static final long serialVersionUID = 1L;\r\n" + "\r\n\tprivate %1$s %2$s;\r\n"
-						+ "\t%3$s" + "\r\n\tprivate String isChecked;",
-						entity.getIdType(), entity.getIdFieldName(),titleField);
+				"\r\n\tprivate static final long serialVersionUID = 1L;\r\n" + "\r\n\tprivate %1$s %2$s;\r\n" + "\t%3$s"
+						+ "\r\n\tprivate String isChecked;",
+				entity.getIDField().getType(), entity.getIDField().getName(), titleField);
 	}
 
 	@Override
@@ -106,25 +104,27 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 		if (omnibusDTO.getTransaction().getEntity().getJoinTables() != null) {
 			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {
 				code += String.format("\tprivate List<%1$s> %2$s;",
-						omnibusDTO.getSharedDTO().getEntityByName(joinTable.getType()).getIdType(),
+						omnibusDTO.getSharedDTO().getEntityByName(joinTable.getType()).getIDField().getType(),
 						joinTable.getField()) + "\r\n";
 			}
 		}
 		code += String.format("\r\n\tpublic %1$s() {\r\n\t\t//default constructor\r\n\t}", PackageUtils
 				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain()));
 		String entityName = omnibusDTO.getTransaction().getEntity().getName();
-		code += String.format("\r\n\tpublic %1$s(%2$s %3$s) {\r\n",
-				PackageUtils
-						.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain()),
-				entityName, entityName.toLowerCase());
-		code += String.format("\t\tif(%1$s !=null){\r\n", entityName.toLowerCase());
+
+		String fields = "";
 		for (Field field : omnibusDTO.getTransaction().getEntity().getFields()) {
 			String fieldName = CommonUtils.getUpperCaseFirstChar(field.getName());
-			code += String.format("\t\t\tthis.%1$s=%2$s.get%3$s();\r\n", field.getName(), entityName.toLowerCase(),
+			fields += String.format("\t\t\tthis.%1$s=%2$s.get%3$s();\r\n", field.getName(), entityName.toLowerCase(),
 					fieldName);
 		}
 
-		code += "\t\t}\r\n\t}";
+		code += String.format(
+				"\r\n\tpublic %1$s(%2$s %3$s) {\r\n" + "\t\tif(%3$s !=null){\r\n" + "%4$s" + "\t\t}\r\n\t}\r\n",
+				PackageUtils
+						.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain()),
+				entityName, entityName.toLowerCase(), fields);
+
 		return code;
 	}
 
@@ -132,8 +132,8 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 	public String buildMethodForTableModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		String code = "";
 		for (Field field : omnibusDTO.getTransaction().getEntity().getFields()) {
-			if (field.getNonViewable() == null) {
-				if (field.getIdentity() != null) {
+			if (field.isIdOrShowInTable()) {
+				if (field.isIdField()) {
 					code += String.format("\tprivate %1$s %2$s;\r\n", field.getType(), field.getName());
 				} else {
 					code += String.format("\tprivate String %1$s;\r\n", field.getName());
@@ -141,24 +141,33 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 			}
 		}
 		String entityName = omnibusDTO.getTransaction().getEntity().getName();
-		code += String.format("\r\n\tpublic %1$s(%2$s %3$s,Map<Integer,String> lookupMap) {\r\n",
+		String entityObj=CommonUtils.getLowerCaseFirstChar(entityName);
+		code += String.format("\r\n\tpublic %1$s(%2$s %3$s, Map<Integer,String> lookupMap) {\r\n",
 				PackageUtils
 						.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getTableModelDomain()),
-				entityName, entityName.toLowerCase());
-		code += String.format("\t\tif(%1$s !=null){\r\n", entityName.toLowerCase());
+				entityName, entityObj);
+		code += String.format("\t\tif(%1$s !=null){\r\n", entityObj);
 		for (Field field : omnibusDTO.getTransaction().getEntity().getFields()) {
-			if (field.getNonViewable() != null)
-				continue;
-			String toString = (field.getIdentity() == null && !field.getType().equalsIgnoreCase("String"))
-					? ".toString()"
-					: "";
-			String fieldName = CommonUtils.getUpperCaseFirstChar(field.getName());
-			if (field.getLookupType() != null) {
-				code += String.format("\t\t\tthis.%1$s=lookupMap.get(%2$s.get%3$s());\r\n", field.getName(),
-						entityName.toLowerCase(), fieldName);
-			} else {
-				code += String.format("\t\t\tthis.%1$s=%2$s.get%3$s()%4$s;\r\n", field.getName(),
-						entityName.toLowerCase(), fieldName, toString);
+			if (field.isIdOrShowInTable()) {
+				String toString = (!field.isIdField() && !field.getType().equalsIgnoreCase(JavaConst.STRING)) ? ".toString()"
+						: "";
+				String fieldName = CommonUtils.getUpperCaseFirstChar(field.getName());
+				if (!field.getLookupType().isEmpty()) {
+					code += String.format("\t\t\tthis.%1$s=lookupMap.get(%2$s.get%3$s());\r\n", field.getName(),
+							entityObj, fieldName);
+				} else {
+					if (!field.getType().equalsIgnoreCase(JavaConst.STRING)) {
+						code+=String.format("\t\t\tif (%1$s.get%2$s()!=null)\r\n\t", entityObj,fieldName);
+					}
+					if (field.getType().equals(Const.DATE)) {
+						String dateStringUtil=CommonUtils.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getDateStringUtils());
+						code += String.format("\t\t\tthis.%1$s=%4$s.convertDateToString(%2$s.get%3$s(), %4$s.DISPLAY_DATE_PATTERN);\r\n", field.getName(),
+								entityObj, fieldName, dateStringUtil);
+					}else {
+						code += String.format("\t\t\tthis.%1$s=%2$s.get%3$s()%4$s;\r\n", field.getName(),
+							entityObj, fieldName, toString);
+					}
+				}
 			}
 		}
 		code += "\t\t}\r\n\t}";
@@ -169,8 +178,11 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 	public String buildMethodForEntity(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 		String code = "";
 		for (Field field : omnibusDTO.getTransaction().getEntity().getFields()) {
-			if (field.getIdentity() != null)
-				code += "\t@Id\r\n" + "\t@GeneratedValue(strategy=GenerationType.IDENTITY)\r\n";
+			if (field.isIdField())
+				code += "\t@Id\r\n";
+
+			if (field.getFieldType().equals(Const.AUTO))
+				code += "\t@GeneratedValue(strategy=GenerationType.IDENTITY)\r\n";
 
 			code += String.format("\t@Column(name = \"%1$s\")\r\n", field.getColumn());
 			code += String.format("\tprivate %1$s %2$s;\r\n", field.getType(), field.getName());
@@ -227,12 +239,13 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 
 	@Override
 	public String buildMethodForBusinessObject(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		String entityName = omnibusDTO.getTransaction().getEntity().getName();
+		Entity entity = omnibusDTO.getTransaction().getEntity();
+		String entityName = entity.getName();
 		String dbGatewayInterface = PackageUtils
 				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getDbGateway());
 		String code = String.format("	@Autowired\r\n" + "	private %1$s dbGateway;\r\n" + "	\r\n",
 				dbGatewayInterface);
-		List<JoinTable> listJoinTable = omnibusDTO.getTransaction().getEntity().getJoinTables();
+		List<JoinTable> listJoinTable = entity.getJoinTables();
 		if (listJoinTable != null) {
 			for (JoinTable joinTable : listJoinTable) {
 				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
@@ -248,7 +261,7 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 				+ "		return dbGateway.findById(id);\r\n" + "	}\r\n" + "\r\n	public void deleteById(%3$s id) {\r\n"
 				+ "		dbGateway.deleteById(id);\r\n" + "	}\r\n" + "	\r\n" + "	public %2$s save(%2$s entity) {\r\n"
 				+ "		return dbGateway.save(entity);\r\n" + "	}\r\n", dbGatewayInterface, entityName,
-				omnibusDTO.getTransaction().getEntity().getFields().get(0).getType());
+				entity.getIDField().getType());
 
 		String editModelClass = PackageUtils
 				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain());
@@ -257,30 +270,92 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 		code += String.format("\r\n\tpublic %1$s get%1$sEntity(%3$s %4$s) {\r\n" + "\t\t%1$s %2$s=new %1$s();\r\n",
 				entityName, entityName.toLowerCase(), editModelClass, editModelObject);
 
+		if (!entity.getIDField().getFieldType().equals(Const.AUTO) || !entity.getCreatedDateField().isEmpty()) {
+			String condition = "";
+			if (entity.getIDField().getType().equals(JavaConst.STRING)) {
+				condition = String.format("%1$s.get%2$s().isEmpty()", editModelObject,
+						CommonUtils.getUpperCaseFirstChar(entity.getIDField().getName()));
+			} else {
+				condition = String.format("%1$s.get%2$s()==null", editModelObject,
+						CommonUtils.getUpperCaseFirstChar(entity.getIDField().getName()));
+			}
+			code += String.format("\t\tif (%1$s) {\r\n" + "			%2$s" + "			%3$s" + "\t\t}\r\n", condition,
+					this.getGenerateID(omnibusDTO), this.setCreatedDate(omnibusDTO));
+		}
+
 		for (Field field : omnibusDTO.getTransaction().getEntity().getFields()) {
-			code += String.format("\t\t%1$s.set%3$s(%2$s.get%3$s());\r\n", entityName.toLowerCase(), editModelObject,
-					CommonUtils.getUpperCaseFirstChar(field.getName()));
+			if (field.getFieldType().equals(Const.LAST_UPDATED)) {
+				code += String.format("\t\t%1$s.set%2$s(%3$s.getCurentTimeUTC());\r\n",
+						CommonUtils.getLowerCaseFirstChar(entityName),
+						CommonUtils.getUpperCaseFirstChar(field.getName()), PackageUtils.getObjectNameFromDomain(
+								omnibusDTO.getSharedDTO().getFixDomainDTO().getDateStringUtils()));
+			} else {
+				code += String.format("\t\t%1$s.set%3$s(%2$s.get%3$s());\r\n", entityName.toLowerCase(),
+						editModelObject, CommonUtils.getUpperCaseFirstChar(field.getName()));
+			}
 		}
 		code += String.format("\t\treturn %1$s;\r\n\t}\r\n", entityName.toLowerCase());
 		return code;
 	}
 
+	private String getGenerateID(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		String editModelObject = CommonUtils.getLowerCaseFirstChar(PackageUtils
+				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain()));
+		Entity entity = omnibusDTO.getTransaction().getEntity();
+
+		if (entity.getIDField().getFieldType().equals(Const.AUTO))
+			return "";
+		String value = "";
+		if (entity.getIDField().getType().equals(Const.UUID)) {
+			value = "UUID.randomUUID()";
+		} else if (entity.getIDField().getType().equals(JavaConst.STRING)) {
+			if (entity.getIDField().getFieldType().equals(Const.UUID))
+				value = "UUID.randomUUID().toString()";
+			else if (entity.getIDField().getFieldType().contains(Const.RANDOM)) {
+				String[] randomArr = entity.getIDField().getFieldType().split("_");
+				int n = 8;
+				if (randomArr.length > 1)
+					n = Integer.valueOf(randomArr[1]);
+				value = String.format("%1$s.getRandomString(%2$s)", PackageUtils
+						.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getDateStringUtils()), n);
+			}
+		} else if (entity.getIDField().getType().equals(JavaConst.INTEGER)
+				|| entity.getIDField().getType().equals(JavaConst.LONG)) {
+			value = String.format("%1$s.hashCode()", editModelObject);
+		}
+
+		return String.format("%1$s.set%2$s(%3$s);\r\n", editModelObject,
+				CommonUtils.getUpperCaseFirstChar(entity.getIDField().getName()), value);
+
+	}
+
+	private String setCreatedDate(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		String editModelObject = CommonUtils.getLowerCaseFirstChar(PackageUtils
+				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getEditModelDomain()));
+		Entity entity = omnibusDTO.getTransaction().getEntity();
+		return (!entity.getCreatedDateField().isEmpty()) ? String.format("%1$s.set%2$s(%3$s.getCurentTimeUTC());\r\n",
+				editModelObject, CommonUtils.getUpperCaseFirstChar(entity.getCreatedDateField()),
+				PackageUtils.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getDateStringUtils()))
+				: "";
+	}
+
 	private String buildGetJoinListDTOMethod(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
 
 		String entityName = omnibusDTO.getTransaction().getEntity().getName();
-		String idType = omnibusDTO.getTransaction().getEntity().getIdType();
-		String idField = CommonUtils.getUpperCaseFirstChar(omnibusDTO.getTransaction().getEntity().getIdFieldName());		
-		String titleField="";
-		for (String title:omnibusDTO.getTransaction().getEntity().getTitleField().split(",")) {
-			titleField+=String.format("\t\t\t%1$sJoin.set%2$s(%1$s.get%2$s());\r\n", entityName.toLowerCase(),CommonUtils.getUpperCaseFirstChar(title));
+		String idType = omnibusDTO.getTransaction().getEntity().getIDField().getType();
+		String idField = CommonUtils
+				.getUpperCaseFirstChar(omnibusDTO.getTransaction().getEntity().getIDField().getName());
+		String titleField = "";
+		for (String title : omnibusDTO.getTransaction().getEntity().getTitleField().split(",")) {
+			titleField += String.format("\t\t\t%1$sJoin.set%2$s(%1$s.get%2$s());\r\n", entityName.toLowerCase(),
+					CommonUtils.getUpperCaseFirstChar(title));
 		}
 		String joinListDTO = CommonUtils
 				.getObjectNameFromDomain(omnibusDTO.getTransaction().getFullDomainDTO().getJoinListDomain());
 		return String.format("\r\n\tpublic List<%3$s> get%3$s(Set<%4$s> ids) {\r\n"
 				+ "		List<%3$s> returnList=new ArrayList<%3$s>(); \r\n"
 				+ "		List<%1$s> all%1$s=this.findAll(); \r\n" + "		for (%1$s %2$s: all%1$s) {\r\n"
-				+ "			%3$s %2$sJoin=new %3$s();\r\n" + "			%2$sJoin.set%5$s(%2$s.get%5$s());\r\n"
-				+ "%6$s"
+				+ "			%3$s %2$sJoin=new %3$s();\r\n" + "			%2$sJoin.set%5$s(%2$s.get%5$s());\r\n" + "%6$s"
 				+ "			if (ids!=null && ids.contains(%2$s.get%5$s())) {\r\n"
 				+ "				%2$sJoin.setIsChecked(\"checked\");\r\n" + "			}\r\n"
 				+ "			returnList.add(%2$sJoin);\r\n" + "		} \r\n" + " 		return returnList;\r\n"
@@ -308,11 +383,10 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {
 				String joinType = CommonUtils.getObjectNameFromDomain(
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getJoinListDomain());
-				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)
-						|| joinTable.getRelation().equals(JavaConst.ONETOMANY)) {
+				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
 					code += String.format("\r\n\tpublic List<%1$s> get%1$s(%3$s %2$sId);\r\n", joinType,
 							CommonUtils.getLowerCaseFirstChar(omnibusDTO.getTransaction().getEntity().getName()),
-							omnibusDTO.getTransaction().getEntity().getIdType());
+							omnibusDTO.getTransaction().getEntity().getIDField().getType());
 				}
 			}
 		}

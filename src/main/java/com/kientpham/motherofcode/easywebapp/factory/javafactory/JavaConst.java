@@ -13,20 +13,30 @@ public class JavaConst {
 	public static final String IMPORT="import ";
 	
 	public static final String DATATABLE="datatable";
-
+	
 	public static final String COMPONENTANNOTATED = "@Component\r\n";
 	
 	public static final String GETSETANNOTATED="@Getter\r\n" + "@Setter\r\n";
 	
 	public static final String RESTCONTROLLER= "@RestController\r\n";
 	
+	public static final String INSTANT_TIME ="import java.time.Instant;\r\n";
+	
+	public static final String CURRENCY ="import java.util.Currency;";
+	
 	public static final String LIST = "import java.util.List;\r\n";
+	
+	public static final String DATE = "import java.util.Date;\r\n";
+	
+	public static final String LOCALDATETIME ="import java.time.LocalDateTime;\r\n";
 	
 	public static final String ARRAYLIST ="import java.util.ArrayList;\r\n";
 	
 	public static final String HASHMAP ="import java.util.HashMap;\r\n";
 	
 	public static final String ITERATOR ="import java.util.Iterator;\r\n";
+	
+	public static final String ImportUUID="import java.util.UUID;\r\n";
 	
 	public static final String COLLECTORS = "import java.util.stream.Collectors;";
 	
@@ -64,6 +74,12 @@ public class JavaConst {
 			
 	public static final String PAGEABLE="import org.springframework.data.domain.Pageable;\r\n" ;
 	
-	public static final String PAGEREQUEST="import org.springframework.data.domain.PageRequest;\r\n";	
+	public static final String PAGEREQUEST="import org.springframework.data.domain.PageRequest;\r\n";
+
+	public static final String STRING="String";
+
+	public static final String INTEGER="Integer";	
+	
+	public static final String LONG="Long";
 	
 }

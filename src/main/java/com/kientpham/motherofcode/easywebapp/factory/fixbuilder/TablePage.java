@@ -1,8 +1,8 @@
 package com.kientpham.motherofcode.easywebapp.factory.fixbuilder;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
-import com.kientpham.motherofcode.easywebapp.factory.FixClassBaseBuilder;
-import com.kientpham.motherofcode.easywebapp.factory.FixClassInterface;
+import com.kientpham.motherofcode.easywebapp.factory.basebuilder.FixClassBaseBuilder;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.FixClassInterface;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaConst;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
 import com.kientpham.motherofcode.easywebapp.model.TransactionModel;

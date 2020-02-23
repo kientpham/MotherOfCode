@@ -43,5 +43,14 @@ public final class CommonUtils {
 	public static String getUpperCaseFirstChar(String className) {
 		return Character.toString(className.charAt(0)).toUpperCase() + className.substring(1);
 	}
+	
+	public static String getColumnName(String name) {
+		String[] arrName = name.split("(?=\\p{Upper})");
+		String column="";
+		for (String aName:arrName) {
+			column+=getUpperCaseFirstChar(aName) + " ";
+		}
+		return column;
+	}
 
 }

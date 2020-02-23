@@ -1,7 +1,12 @@
 package com.kientpham.motherofcode.easywebapp.factory.javafactory;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
-import com.kientpham.motherofcode.easywebapp.factory.FixClassInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.FixClassInterface;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
 import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
 import com.kientpham.motherofcode.utils.CommonUtils;
@@ -130,6 +135,33 @@ public class JavaFixClassBuilder implements FixClassInterface {
 				+ "		});\r\n" + "		return records;\r\n" + "	}",
 				CommonUtils.getObjectNameFromDomain(omnibusDTO.getSharedDTO().getFixDomainDTO().getDataTablePresenter())
 						.trim());
+	}
+
+	@Override
+	public String buildDateStringUtilsBody(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return String.format(
+				"\r\nimport java.text.SimpleDateFormat;"
+				+ "import java.time.LocalDateTime;\r\n" + 
+				"import java.time.ZoneId;\r\n" + 
+				"import java.util.Date;\r\n"+ "\r\n" + 
+				"public class DateStringUtils {\r\n"
+				+ "\r\n\tpublic static final String DISPLAY_DATE_PATTERN=\"dd MMM yyyy\";\r\n"
+				+ "\r\n\tpublic static String convertDateToString(Date date, String outputPattern) {\r\n" + 
+				"		return (new SimpleDateFormat(outputPattern)).format(date);\r\n" + 
+				"	}\r\n" +				
+				"\r\n	public static String getRandomString(int n) {\r\n" + 
+				"		String AlphaNumericString = \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvxyz\";\r\n" + 
+				"		StringBuilder sb = new StringBuilder(n);\r\n" + 
+				"		for (int i = 0; i < n; i++) {\r\n" + 
+				"			// generate a random number between 0 to AlphaNumericString variable length\r\n" + 
+				"			int index = (int) (AlphaNumericString.length() * Math.random());\r\n" + 
+				"			sb.append(AlphaNumericString.charAt(index));\r\n" + 
+				"		}\r\n" + 
+				"		return sb.toString();\r\n" + 
+				"	}\r\n"
+				+ "\r\n\tpublic static LocalDateTime getCurentTimeUTC() {		\r\n" + 
+				"		return (new Date()).toInstant().atZone(ZoneId.of(\"UTC\")).toLocalDateTime();\r\n" + 
+				"	}");
 	}
 
 }

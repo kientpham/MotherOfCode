@@ -5,19 +5,18 @@ import com.kientpham.motherofcode.easywebapp.factory.basebuilder.FixClassBaseBui
 import com.kientpham.motherofcode.easywebapp.factory.interfaces.FixClassInterface;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
 import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
-import com.kientpham.motherofcode.utils.Const;
 
-public class DataTablePresenter extends FixClassBaseBuilder {
+public class DateStringUtilsBuilder extends FixClassBaseBuilder {
 
 	@Override
 	protected String buildCodeBody(FixClassInterface fixClassBuilder,
 			BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		return fixClassBuilder.buildDataTablePresenter(omnibusDTO);
+		return fixClassBuilder.buildDateStringUtilsBody(omnibusDTO);
 	}
 
 	@Override
 	protected String getDomain(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
-		return omnibusDTO.getSharedDTO().getFixDomainDTO().getDataTablePresenter();
+		return omnibusDTO.getSharedDTO().getFixDomainDTO().getDateStringUtils();
 	}
 
 }

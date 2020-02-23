@@ -2,11 +2,12 @@ package com.kientpham.motherofcode.easywebapp.model;
 
 import java.util.List;
 
-import com.kientpham.motherofcode.easywebapp.factory.ClassNameInterface;
-import com.kientpham.motherofcode.easywebapp.factory.FixClassInterface;
-import com.kientpham.motherofcode.easywebapp.factory.ImportLibInterface;
-import com.kientpham.motherofcode.easywebapp.factory.MethodBuilderInterface;
-import com.kientpham.motherofcode.easywebapp.factory.PackageInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.ClassNameInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.FixClassInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.HtmlEditPageBase;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.ImportLibInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.MethodBuilderInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.PackageInterface;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,10 +20,12 @@ public class CodeFactory {
 	
 	private PackageInterface packageBuilder;
 	
+	private HtmlEditPageBase htmlPageBuilder;
+	
 	private List<ImportLibInterface> importLibBuilderList;
 	
 	private List<ClassNameInterface> classNameBuilderList; 
 	
-	private List<MethodBuilderInterface> methodBuilderList;
+	private List<MethodBuilderInterface> methodBuilderList;	
 	
 }

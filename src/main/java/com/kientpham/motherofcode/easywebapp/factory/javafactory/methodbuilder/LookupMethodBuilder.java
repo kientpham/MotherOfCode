@@ -20,7 +20,7 @@ public class LookupMethodBuilder extends JavaMethodBaseBuilder {
 		return super.buildMethodForRepository(omnibusDTO)
 				+ String.format("\tList<%1$s> findBy%2$s(String %3$s);\r\n\r\n" + "\tList<%1$s> findAll(Sort sort);",
 						entityName, lookupType, CommonUtils.getLowerCaseFirstChar(lookupType));
-	}
+	}	
 
 	@Override
 	public String buildMethodForDBGatewayInterface(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
@@ -39,6 +39,16 @@ public class LookupMethodBuilder extends JavaMethodBaseBuilder {
 						+ "	public List<%1$s> findAllSorted() {\r\n"
 						+ "		return repository.findAll(Sort.by(\"order\").ascending());		\r\n" + "	}",
 				entityName, lookupType, CommonUtils.getLowerCaseFirstChar(lookupType));
+	}
+	
+	@Override
+	public String buildMethodForEditModel(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO) {
+		return super.buildMethodForEditModel(omnibusDTO) + String.format(
+				"\r\n\t@Override\r\n"+
+				"	public int hashCode() {\r\n" + 
+				"		return (this.%1$s+this.%2$s).hashCode();		\r\n" + 
+				"	}", omnibusDTO.getTransaction().getEntity().getFields().get(1).getName(),
+				omnibusDTO.getTransaction().getEntity().getFields().get(2).getName());
 	}
 
 	@Override

@@ -13,11 +13,12 @@ import javax.xml.bind.Unmarshaller;
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
 import com.kientpham.motherofcode.baseworkflow.BaseTransactionManager;
 import com.kientpham.motherofcode.baseworkflow.WorkflowException;
-import com.kientpham.motherofcode.easywebapp.factory.ClassNameInterface;
-import com.kientpham.motherofcode.easywebapp.factory.FixClassInterface;
-import com.kientpham.motherofcode.easywebapp.factory.ImportLibInterface;
-import com.kientpham.motherofcode.easywebapp.factory.MethodBuilderInterface;
-import com.kientpham.motherofcode.easywebapp.factory.PackageInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.ClassNameInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.FixClassInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.HtmlEditPageBase;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.ImportLibInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.MethodBuilderInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.PackageInterface;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaFixClassBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.classname.ClassNameBuilderBase;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.classname.ClassNamePaging;
@@ -30,6 +31,9 @@ import com.kientpham.motherofcode.easywebapp.factory.javafactory.methodbuilder.U
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.methodbuilder.PagingMethodBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.methodbuilder.JavaMethodBaseBuilder;
 import com.kientpham.motherofcode.easywebapp.factory.javafactory.packagebuilder.JavaPackageBuilder;
+import com.kientpham.motherofcode.easywebapp.factory.uibuilder.EditHasMultiTable;
+import com.kientpham.motherofcode.easywebapp.factory.uibuilder.EditHasOneList;
+import com.kientpham.motherofcode.easywebapp.factory.uibuilder.EditPageBuilder;
 import com.kientpham.motherofcode.easywebapp.model.Application;
 import com.kientpham.motherofcode.easywebapp.model.CodeFactory;
 import com.kientpham.motherofcode.easywebapp.model.Entity;
@@ -55,7 +59,8 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 	}
 
 	@Override
-	public BaseOmnibusDTO<TransactionModel, SharedDTO> initiateBaseOmnibusDTO(List<TransactionModel> transactionList) throws WorkflowException {
+	public BaseOmnibusDTO<TransactionModel, SharedDTO> initiateBaseOmnibusDTO(List<TransactionModel> transactionList)
+			throws WorkflowException {
 
 		BaseOmnibusDTO<TransactionModel, SharedDTO> baseOmnibusDTO = new BaseOmnibusDTO<TransactionModel, SharedDTO>();
 		SharedDTO shareDTO = new SharedDTO();
@@ -71,7 +76,7 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 	@Override
 	public List<TransactionModel> getTransactionModel(List<?> inputList) throws WorkflowException {
 		application = this.getApplicationFromXML(inputList.get(0).toString());
-		language=inputList.get(1).toString();
+		language = inputList.get(1).toString();
 		List<TransactionModel> listTransaction = new ArrayList<TransactionModel>();
 		List<Service> services = application.getServices();
 		for (Service service : services) {
@@ -90,7 +95,7 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 	private CodeFactory getCodeFactory(String language, Entity entity) {
 		CodeFactory codeFactory = new CodeFactory();
 		PackageInterface packageBuilder = null;
-		FixClassInterface fixClassBuilder=null;
+		FixClassInterface fixClassBuilder = null;
 
 		List<ImportLibInterface> importLibBuilderList = new ArrayList<ImportLibInterface>();
 		List<ClassNameInterface> classNameBuilderList = new ArrayList<ClassNameInterface>();
@@ -98,14 +103,25 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 
 		if (language.equals(Const.JAVA)) {
 			packageBuilder = new JavaPackageBuilder();
-			fixClassBuilder=new JavaFixClassBuilder();
+			fixClassBuilder = new JavaFixClassBuilder();
 			setListBuildersForJava(entity, importLibBuilderList, classNameBuilderList, methodBuilderList);
 		}
 		codeFactory.setFixClassBuilder(fixClassBuilder);
 		codeFactory.setPackageBuilder(packageBuilder);
 		codeFactory.setImportLibBuilderList(importLibBuilderList);
 		codeFactory.setClassNameBuilderList(classNameBuilderList);
-		codeFactory.setMethodBuilderList(methodBuilderList);
+		codeFactory.setMethodBuilderList(methodBuilderList);		
+		if (entity!= null) {
+			HtmlEditPageBase htmlPageBuilder=null; 
+			int n = entity.getListMulitpleJoinTable().size();
+			if (n == 1)
+				htmlPageBuilder = new EditHasOneList();
+			else if (n == 2)
+				htmlPageBuilder = new EditHasMultiTable();
+			else
+				htmlPageBuilder = new HtmlEditPageBase();
+			codeFactory.setHtmlPageBuilder(htmlPageBuilder);
+		}
 		return codeFactory;
 
 	}
@@ -123,12 +139,12 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 			}
 			switch (type) {
 			case Const.ENITY_TYPE_LOOKUP:
-				 importLibBuilderList.add(new ImportLibForLookup());
-				 methodBuilderList.add(new LookupMethodBuilder());
+				importLibBuilderList.add(new ImportLibForLookup());
+				methodBuilderList.add(new LookupMethodBuilder());
 				break;
 			case Const.USER:
-				 importLibBuilderList.add(new ImportLibForUser());
-				 methodBuilderList.add(new UserMethodBuilder());
+				importLibBuilderList.add(new ImportLibForUser());
+				methodBuilderList.add(new UserMethodBuilder());
 				break;
 			default:
 				importLibBuilderList.add(new ImportLibBuilderBase());
@@ -136,9 +152,9 @@ public class TransactionManager implements BaseTransactionManager<TransactionMod
 				break;
 			}
 			if (entity.hasPaging() != null) {
-				 importLibBuilderList.add(new ImportLibForPaging());
-				 classNameBuilderList.add(new ClassNamePaging());
-				 methodBuilderList.add(new PagingMethodBuilder());
+				importLibBuilderList.add(new ImportLibForPaging());
+				classNameBuilderList.add(new ClassNamePaging());
+				methodBuilderList.add(new PagingMethodBuilder());
 			} else {
 				classNameBuilderList.add(new ClassNameBuilderBase());
 			}

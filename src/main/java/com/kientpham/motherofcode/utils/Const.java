@@ -40,5 +40,23 @@ public final class Const {
 	
 	public static final String UTILS="utils";
 	
+	public static final String AUTO="AUTO";
+
+	public static final String CREATED_DATE = "CREATED_DATE";
+
+	public static final String LAST_UPDATED = "LAST_UPDATED";
+
+	public static final String MSSQLSERVER="MSSQLSERVER";
+
+	public static final String UUID="UUID";
+
+	public static final String RANDOM="RANDOM";
+
+	public static final String DATE="Date";
+	
+	public static final String LOCALDATETIME="LocalDateTime";
+
+	public static final String CURRENCY="Currency";
+	
 	
 }

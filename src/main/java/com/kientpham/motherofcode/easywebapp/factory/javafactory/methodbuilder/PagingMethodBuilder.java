@@ -1,7 +1,7 @@
 package com.kientpham.motherofcode.easywebapp.factory.javafactory.methodbuilder;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
-import com.kientpham.motherofcode.easywebapp.factory.MethodBuilderInterface;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.MethodBuilderInterface;
 import com.kientpham.motherofcode.easywebapp.model.Entity;
 import com.kientpham.motherofcode.easywebapp.model.Field;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
