@@ -1,4 +1,4 @@
-package com.kientpham.motherofcode.easywebapp.factory;
+package com.kientpham.motherofcode.easywebapp.factory.interfaces;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
@@ -21,5 +21,7 @@ public interface FixClassInterface {
 	String buildTablePage(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 
 	String buildDataTablePresenter(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
+
+	String buildDateStringUtilsBody(BaseOmnibusDTO<TransactionModel, SharedDTO> omnibusDTO);
 
 }

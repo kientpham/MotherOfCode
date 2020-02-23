@@ -1,18 +1,12 @@
-package com.kientpham.motherofcode.easywebapp.factory;
+package com.kientpham.motherofcode.easywebapp.factory.basebuilder;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
-import com.kientpham.motherofcode.easywebapp.factory.javafactory.JavaConst;
+import com.kientpham.motherofcode.easywebapp.factory.interfaces.FixClassInterface;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
 import com.kientpham.motherofcode.easywebapp.model.TransactionModel;
 import com.kientpham.motherofcode.utils.Const;
 
 public abstract class FixClassBaseBuilder extends AbstractBuilder{
-	
-//	abstract protected String buildClassName(BaseOmnibusDTO<TransactionModel,SharedDTO> omnibusDTO);
-	
-//	abstract protected String getBuilderDomain(BaseOmnibusDTO<TransactionModel,SharedDTO> omnibusDTO);
-		
-	//abstract protected void saveOutputDomain(BaseOmnibusDTO<TransactionModel,SharedDTO> omnibusDTO,String outputDomain);
 	
 	abstract protected String buildCodeBody(FixClassInterface fixClassBuilder,BaseOmnibusDTO<TransactionModel,SharedDTO> omnibusDTO);
 	

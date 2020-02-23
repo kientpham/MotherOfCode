@@ -1,4 +1,4 @@
-package com.kientpham.motherofcode.easywebapp.factory;
+package com.kientpham.motherofcode.easywebapp.factory.interfaces;
 
 import com.kientpham.motherofcode.baseworkflow.BaseOmnibusDTO;
 import com.kientpham.motherofcode.easywebapp.model.SharedDTO;
