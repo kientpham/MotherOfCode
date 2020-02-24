@@ -132,7 +132,7 @@ public class ServiceMethodDomain {
 		String editModelObject = CommonUtils.getLowerCaseFirstChar(editModelClass);
 		return String.format(
 				"\r\n\t@Override\r\n\tpublic %3$s save%1$s(%3$s %4$s) {\r\n" + "\t\t%1$s %2$s=%5$s.get%1$sEntity(%4$s);\r\n"
-						+ "\t\t%6$s" + "\t\t%5$s.save(%2$s);\r\n"
+						+ "%6$s" + "\t\t%5$s.save(%2$s);\r\n"
 						+ "\t\treturn %4$s;\r\n" + "\t}",
 				entityName, CommonUtils.getLowerCaseFirstChar(entityName), editModelClass, editModelObject,
 				CommonUtils.getLowerCaseFirstChar(businessDomainName), this.buildGetListJoinEntity(omnibusDTO));
@@ -148,12 +148,12 @@ public class ServiceMethodDomain {
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getBussinessDomain());
 				String joinEntityObject = CommonUtils.getObjectNameFromDomain(
 						omnibusDTO.getSharedDTO().getFullDomainTable().get(joinTable.getType()).getEntityDomain());
-				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
-					code += String.format("%1$s.set%2$ss(%3$s.findByListIds(%4$s.get%2$ss()));\r\n",
+				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY) || joinTable.getRelation().equals(JavaConst.ONETOMANY)) {
+					code += String.format("\t\t%1$s.set%2$ss(%3$s.findByListIds(%4$s.get%2$ss()));\r\n",
 							CommonUtils.getLowerCaseFirstChar(entityName), joinEntityObject, CommonUtils.getLowerCaseFirstChar(joinDomainObject),
 							editModelClass);
-				}else if (joinTable.getRelation().equals(JavaConst.ONETOMANY)) {
-					code += String.format("%1$s.set%2$s(%3$s.findByListIds(%4$s.get%2$s()));\r\n",
+				}else if (joinTable.getRelation().equals(JavaConst.MANYTOONE)) {
+					code += String.format("\t\t%1$s.set%2$s(%3$s.findById(%4$s.get%2$s()));\r\n",
 							CommonUtils.getLowerCaseFirstChar(entityName), joinEntityObject, CommonUtils.getLowerCaseFirstChar(joinDomainObject),
 							editModelClass);
 				}

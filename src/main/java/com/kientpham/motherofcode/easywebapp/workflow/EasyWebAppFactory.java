@@ -47,7 +47,7 @@ public class EasyWebAppFactory extends AbstractFactory<TransactionModel, SharedD
 	
 	private DataTablePresenter dataTablePresenter=new DataTablePresenter();
 	
-	private DateStringUtilsBuilder commonUtilsBuilder=new DateStringUtilsBuilder();
+	private DateStringUtilsBuilder dateStringUtilsBuilder=new DateStringUtilsBuilder();
 	
 	private PagingInputBuilder pagingInputBuilder = new PagingInputBuilder();
 	
@@ -99,7 +99,7 @@ public class EasyWebAppFactory extends AbstractFactory<TransactionModel, SharedD
 		workflow.setPreExecuteBuilder(searchCriteria);
 		workflow.setPreExecuteBuilder(tablePage);
 		workflow.setPreExecuteBuilder(dataTablePresenter);
-		workflow.setPreExecuteBuilder(commonUtilsBuilder);
+		workflow.setPreExecuteBuilder(dateStringUtilsBuilder);
 		
 		workflow.setFirstBuilder(entityBuilder);
 		workflow.setNextBuilder(crudRepositoryBuilder);

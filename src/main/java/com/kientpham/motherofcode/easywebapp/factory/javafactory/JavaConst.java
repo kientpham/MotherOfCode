@@ -6,6 +6,8 @@ public class JavaConst {
 	
 	public static final String ONETOMANY="@OneToMany";
 	
+	public static final String MANYTOONE="@ManyToOne";
+	
 	public static final String SRC_PATH="\\src\\main";
 
 	public static final String NEWLINE=";\r\n";

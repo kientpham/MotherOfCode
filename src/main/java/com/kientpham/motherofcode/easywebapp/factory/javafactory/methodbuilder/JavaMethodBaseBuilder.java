@@ -103,9 +103,16 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 		}
 		if (omnibusDTO.getTransaction().getEntity().getJoinTables() != null) {
 			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {
-				code += String.format("\tprivate List<%1$s> %2$s;",
+				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)
+						|| joinTable.getRelation().equals(JavaConst.ONETOMANY)) {
+					code += String.format("\tprivate List<%1$s> %2$s;",
 						omnibusDTO.getSharedDTO().getEntityByName(joinTable.getType()).getIDField().getType(),
 						joinTable.getField()) + "\r\n";
+				}else if (joinTable.getRelation().equals(JavaConst.MANYTOONE)){
+					code += String.format("\tprivate %1$s %2$s;",
+							omnibusDTO.getSharedDTO().getEntityByName(joinTable.getType()).getIDField().getType(),
+							joinTable.getField()) + "\r\n";
+				}
 			}
 		}
 		code += String.format("\r\n\tpublic %1$s() {\r\n\t\t//default constructor\r\n\t}", PackageUtils

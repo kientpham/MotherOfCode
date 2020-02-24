@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<application name="EasyApp" title="Easy Web Application" database="MOC" dbms="MSSQLSERVER" domain="com.kientpham.webapp" appPath="C:\Users\jm838d\Documents\1. My Prj\MyToolkits\baseapp\base-webapp-autogen">
+<application name="EasyApp" title="Easy Web Application" database="MOC" dbms="MSSQLSERVER" domain="com.kientpham.webapp" appPath="C:\Projects\Toolkits\easywebapp">
+<!-- H "C:\Projects\Toolkits\easywebapp" -->
+<!-- B "C:\Users\jm838d\Documents\1. My Prj\MyToolkits\baseapp\base-webapp-autogen" -->
 	<userinterface domain="webappui" controller="controller"></userinterface>
 	<commonDomain>commonlib</commonDomain>	
 	<service name="shareservice" >
@@ -10,7 +12,7 @@
 			<field name="sequence" column="SEQUENCE" type="Integer"/>
 			<field name="description" column="DESCRIPTION" type="String"/>			
 		</entity>
-	</service>	
+	</service>	 
 	<service name="userservice" >		
 		<entity name="Group" table="\&quot;GROUP\&quot;" titleFields="name">
 			<field name="id" type="Integer" fieldType="AUTO" column="GROUP_ID" />
@@ -21,7 +23,7 @@
 			<joinTable relation="@ManyToMany" type="Permission" field="permissions" name="GROUP_PERMISSION_JOIN" joinColumns="GROUP_ID" inverseJoinColumns = "PERMISSION_ID"/>
 		</entity>	
 		<entity name="User" table="\&quot;USER\&quot;" hasPaging="true" type="USER" titleFields="username,firstName,lastName,email">
-			<field name="id" type="UUID" column="USER_ID" />
+			<field name="id" type="UUID" fieldType="AUTO" column="USER_ID" />
 			<field name="username" column="USER_NAME" type="String" sort="true" width="10" required="true"/>
 			<field name="password" column="PASSWORD" type="String" hidden="TABLE"/>
 			<field name="firstName" column="FIRST_NAME" type="String" sort="true" width="10"/>
@@ -49,15 +51,17 @@
 	</service>
 	<service name="orderservice" >		
 		<entity name="Order" table="\&quot;ORDER\&quot;" titleFields="title">
-			<field name="id" type="String" fieldType="UUID" column="ORDER_ID" />
-			<field name="number" column="ORDER_NO" type="String"/>			
+			<field name="id" type="UUID" column="ORDER_ID" />
+			<field name="number" column="ORDER_NO" type="String"/>
+			<field name="totalPrice" column="TOTAL_PRICE" type="Currency"/>			
 			<field name="status" column="STATUS" type="Integer" lookupType="ORDER_STATUS"/>
 			<field name="userId" column="USER_ID" type="UUID" joinField="userservice.User.id"/>	
 			<joinTable relation="@OneToMany" type="OrderItem" field="orderItems" joinColumns="ORDER_ITEM_ID"/>		
 		</entity>	
 		<entity name="OrderItem" table="ORDER_ITEM" titleFields="title">
 			<field name="id" type="String" fieldType="UUID" column="ORDER_ITEM_ID" />						
-			<field name="quatity" column="QUANTITY" type="Integer" column="QUANTITY"/>
+			<field name="quatity" column="QUANTITY" type="Integer"/>
+			<field name="itemPrice" column="ITEM_PRICE" type="Currency"/>
 			<joinTable relation="@ManyToOne" type="Order" field="order" joinColumns="ORDER_ID"/>
 			<joinTable relation="@ManyToOne" type="Product" field="product" joinColumns="PRODUCT_ID"/>									
 		</entity>	
@@ -71,7 +75,7 @@
 			<field name="name" column="PRODUCT_NAME" type="String"/>
 			<field name="price" column="PRICE" type="Currency"/>
 			<field name="description" column="DESCRIPTION" type="String"/>			
-			<joinTable relation="@OneToMany" type="ProductCategory" field="productCategory" joinColumns="CATEGORY_ID"/>
+			<joinTable relation="@ManyToOne" type="ProductCategory" field="productCategory" joinColumns="CATEGORY_ID"/>
 		</entity>	
 	</service>
 </application>
