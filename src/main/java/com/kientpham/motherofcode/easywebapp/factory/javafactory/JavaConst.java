@@ -8,6 +8,8 @@ public class JavaConst {
 	
 	public static final String MANYTOONE="@ManyToOne";
 	
+	public static final String ONETOONE="@OneToOne";
+	
 	public static final String SRC_PATH="\\src\\main";
 
 	public static final String NEWLINE=";\r\n";
@@ -82,6 +84,6 @@ public class JavaConst {
 
 	public static final String INTEGER="Integer";	
 	
-	public static final String LONG="Long";
+	public static final String LONG="Long";	
 	
 }

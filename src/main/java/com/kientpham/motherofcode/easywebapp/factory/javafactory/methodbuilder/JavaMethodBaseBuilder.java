@@ -197,17 +197,31 @@ public class JavaMethodBaseBuilder implements MethodBuilderInterface {
 
 		if (omnibusDTO.getTransaction().getEntity().getJoinTables() != null) {
 			for (JoinTable joinTable : omnibusDTO.getTransaction().getEntity().getJoinTables()) {
-				code += "\t" + joinTable.getRelation() + "\r\n" + String.format(
-						"\t@JoinTable(name = \"%1$s\", joinColumns = { @JoinColumn(name = \"%2$s\") }, inverseJoinColumns = {\r\n"
-								+ "\t\t@JoinColumn(name = \"%3$s\") })",
-						joinTable.getColumnName(), joinTable.getJoinColumns(), joinTable.getInverseJoinColumns())
-						+ "\r\n";
-				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)
-						|| joinTable.getRelation().equals(JavaConst.ONETOMANY)) {
+				
+				if (joinTable.getRelation().equals(JavaConst.MANYTOMANY)) {
+					code += "\t" + joinTable.getRelation() + "\r\n" + String.format(
+							"\t@JoinTable(name = \"%1$s\", joinColumns = { @JoinColumn(name = \"%2$s\") }, inverseJoinColumns = {\r\n"
+									+ "\t\t@JoinColumn(name = \"%3$s\") })",
+							joinTable.getColumnName(), joinTable.getJoinColumns(), joinTable.getInverseJoinColumns())
+							+ "\r\n";
+					code += String.format("\tprivate List<%1$s> %2$s;", joinTable.getType(), joinTable.getField())
+							+ "\r\n"; //TODO change List to Set for better performance
+				} else if (joinTable.getRelation().equals(JavaConst.ONETOMANY)){
+					code += "\t" + joinTable.getRelation() + "\r\n" + String.format(
+							"\t@JoinTable(name = \"%1$s\", joinColumns = { @JoinColumn(name = \"%2$s\") }, inverseJoinColumns = {\r\n"
+									+ "\t\t@JoinColumn(name = \"%3$s\") })",
+							joinTable.getColumnName(), joinTable.getJoinColumns(), joinTable.getInverseJoinColumns())
+							+ "\r\n";
 					code += String.format("\tprivate List<%1$s> %2$s;", joinTable.getType(), joinTable.getField())
 							+ "\r\n";
-				} else {
+				}else if (joinTable.getRelation().equals(JavaConst.MANYTOONE)){
+					code += "\t" + joinTable.getRelation() + "\r\n" + String.format(
+							"\t@JoinTable(name = \"%1$s\", joinColumns = { @JoinColumn(name = \"%2$s\") }, inverseJoinColumns = {\r\n"
+									+ "\t\t@JoinColumn(name = \"%3$s\") })",
+							joinTable.getColumnName(), joinTable.getJoinColumns(), joinTable.getInverseJoinColumns());
 					code += String.format("\tprivate %1$s %2$s;", joinTable.getType(), joinTable.getField()) + "\r\n";
+				}else if (joinTable.getRelation().equals(JavaConst.ONETOONE)){
+					
 				}
 
 			}
